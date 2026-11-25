@@ -1,5 +1,6 @@
-# Finance HW Practice
+# DBA Practice Pages
 
-Interactive self-practice for Brigham & Houston, Ch. 4, problems 4-4 to 4-24 (DBA, Al-Azhar University).
+Interactive self-practice for the DBA cohort, Al-Azhar University.
 
-Live page: https://samehhabbash-alt.github.io/finance-hw-practice/
+- Finance (Brigham & Houston Ch. 4, problems 4-4 to 4-24): https://samehhabbash-alt.github.io/finance-hw-practice/
+- Statistical Analysis (Lectures 1-5): https://samehhabbash-alt.github.io/finance-hw-practice/statistics/

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Statistics Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Archivo:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a calm, exact tutor; no noise, every step checkable.
+   IDEA: the Casio fx-991 in STAT mode — keys, LCD readout, a worked fraction on paper.
+   PICTURE: each problem's answer box is a real fraction/product you fill in, judged live.
+   COLOUR and TYPE: white paper, charcoal keys, LCD green-grey readout, one signal red accent; Cairo + Archivo.
+   LAYOUT: one problem per view, chip rail on top, Arabic explanation RTL, English question LTR, answer box last. */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121313);--ink:light-dark(#141414,#ececea);--mute:light-dark(#5d5d5a,#a3a39e);--line:light-dark(#dededa,#2c2d2c);--card:light-dark(#f5f5f2,#1b1c1b);--key:light-dark(#2b2d30,#3a3d41);--keyink:#f4f4f2;--lcd:light-dark(#c9d3bd,#2e3a2a);--lcdink:light-dark(#1d2618,#d7e6c9);--acc:#e4002b;--ok:light-dark(#137a3a,#4fd17f);--bad:light-dark(#c0001f,#ff6b7f)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 Cairo,"Segoe UI",Tahoma,sans-serif;overflow-x:clip}
+.ltr{direction:ltr;text-align:left;font-family:Archivo,Cairo,sans-serif}
+.f{direction:ltr;unicode-bidi:isolate;font-family:Archivo,sans-serif;font-weight:600;white-space:nowrap}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:3px solid var(--ink)}
+.top{display:flex;align-items:center;gap:12px;padding:10px max(4vw,14px) 4px;flex-wrap:wrap}
+.top h1{font:800 18px/1.2 Archivo,Cairo,sans-serif;margin:0;direction:ltr}
+.prog{margin-inline-start:auto;font-size:14px;color:var(--mute)}
+.rail{display:flex;gap:6px;overflow-x:auto;padding:8px max(4vw,14px) 10px;direction:ltr;scrollbar-width:thin}
+.rail a{flex:none;min-width:52px;height:38px;display:grid;place-items:center;border:1.5px solid var(--line);border-radius:8px;color:var(--ink);text-decoration:none;font:700 14px Archivo,sans-serif;background:var(--card)}
+.rail a.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.rail a.done{border-color:var(--ok);box-shadow:inset 0 -3px 0 var(--ok)}
+main{max-width:860px;margin:0 auto;padding:18px max(4vw,14px) 60px}
+h2{font:800 clamp(24px,4.5vw,34px)/1.1 Archivo,Cairo,sans-serif;margin:6px 0 4px;text-wrap:balance}
+.sub{color:var(--mute);margin:0 0 16px;direction:ltr;text-align:left;font-family:Archivo,sans-serif}
+section{border-top:1px solid var(--line);padding:16px 0}
+h3{font:800 19px/1.3 Cairo,sans-serif;margin:0 0 10px}
+h3 small{font-weight:600;color:var(--mute);font-size:14px}
+.row{margin:0 0 10px}
+.lbl{font-weight:800;color:var(--acc)}
+.ab{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;margin:6px 0 0;padding:0}
+.ab dt{font:700 15px Archivo,sans-serif;direction:ltr;background:var(--ink);color:var(--bg);padding:1px 8px;border-radius:4px;justify-self:start;align-self:start}
+.ab dd{margin:0}.ab dd i{font-style:normal;color:var(--mute);direction:ltr;unicode-bidi:isolate;font-family:Archivo,sans-serif;font-size:14px}
+.hl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.hl div{background:var(--card);border-radius:10px;padding:10px 12px;font-size:15px}
+.hl b{display:block}
+.forms{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.forms li{background:var(--card);border-inline-start:4px solid var(--ink);padding:6px 12px;border-radius:4px;direction:ltr;text-align:left;font:600 15px Archivo,sans-serif;overflow-x:auto}
+details{background:var(--card);border-radius:10px;padding:10px 14px}
+summary{cursor:pointer;font-weight:800;min-height:28px}
+.steps{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.steps li{display:flex;flex-wrap:wrap;align-items:center;gap:8px;border-bottom:1px dashed var(--line);padding-bottom:10px}
+.keys{direction:ltr;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+kbd{display:inline-grid;place-items:center;min-width:34px;height:30px;padding:0 7px;border-radius:6px;background:var(--key);color:var(--keyink);font:700 14px Archivo,sans-serif;box-shadow:0 2px 0 #000a}
+.num{font:700 16px Archivo,sans-serif;padding:0 2px}
+.lcd{direction:ltr;background:var(--lcd);color:var(--lcdink);font:700 17px "Courier New",monospace;padding:3px 10px;border-radius:5px;min-width:120px;text-align:right}
+.note{color:var(--mute);font-size:14px}
+.q{background:var(--card);border-radius:10px;padding:14px 16px;font-size:16.5px;line-height:1.6}
+.box{border:2px solid var(--ink);border-radius:12px;padding:14px;margin:0 0 14px}
+.box .t{direction:ltr;text-align:left;font:700 15px Archivo,sans-serif;margin:0 0 10px}
+.eq{direction:ltr;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.frac{display:inline-flex;flex-direction:column;align-items:center;gap:6px}
+.frac hr{width:100%;border:0;border-top:3px solid var(--ink);margin:0}
+.op{font:800 22px Archivo,sans-serif}
+.fld{display:flex;flex-direction:column;align-items:center;gap:2px}
+.fld small{font:600 12.5px Archivo,sans-serif;color:var(--mute)}
+input[type=text]{width:9.5em;height:44px;font:700 16px Archivo,sans-serif;text-align:center;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+input:focus,button:focus-visible,a:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.fld.ok input{border-color:var(--ok);border-width:2.5px}.fld.bad input{border-color:var(--bad);border-width:2.5px}
+.mk{font-size:13px;font-weight:700;min-height:18px;direction:rtl}
+.fld.ok .mk{color:var(--ok)}.fld.bad .mk{color:var(--bad)}
+.mcq label{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1.5px solid var(--line);border-radius:8px;margin:0 0 8px;direction:ltr;text-align:left;cursor:pointer;font-family:Archivo,sans-serif}
+.mcq label.ok{border-color:var(--ok)}.mcq label.bad{border-color:var(--bad)}
+.mcq input{width:20px;height:20px;margin-top:3px}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 0}
+button{min-height:46px;padding:0 18px;border-radius:10px;border:2px solid var(--ink);background:var(--bg);color:var(--ink);font:800 16px Cairo,sans-serif;cursor:pointer}
+button.main{background:var(--acc);border-color:var(--acc);color:#fff}
+.res{margin:12px 0 0;padding:12px 14px;border-radius:10px;font-weight:700;display:none}
+.res.ok{display:block;background:color-mix(in srgb,var(--ok) 14%,transparent);border:2px solid var(--ok)}
+.res.bad{display:block;background:color-mix(in srgb,var(--bad) 10%,transparent);border:2px solid var(--bad)}
+.mean{margin-top:8px;font-weight:600}
+.model{display:none;margin-top:12px}.model.show{display:block}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;direction:ltr}
+.intro ol{padding-inline-start:22px}.intro li{margin:0 0 6px}
+.warn{border-inline-start:4px solid var(--acc);padding:8px 12px;background:var(--card);border-radius:4px;font-size:15px}
+/* memory layer: one colour per ratio family, one colour per variable, everywhere */
+:root{--liq:#1c7ed6;--ast:#f08c00;--dbt:#e03131;--prf:#2f9e44;--mkt:#7048e8;--dup:#0c8599;--mix:#495057}
+.fam-liq{--fc:var(--liq)}.fam-ast{--fc:var(--ast)}.fam-dbt{--fc:var(--dbt)}.fam-prf{--fc:var(--prf)}.fam-mkt{--fc:var(--mkt)}.fam-dup{--fc:var(--dup)}.fam-mix{--fc:var(--mix)}
+.band{background:var(--fc);color:#fff;border-radius:14px;padding:16px 18px;margin:0 0 14px;position:relative;overflow:hidden}
+.band h2{color:#fff;margin:0}.band .sub{color:#ffffffd9;margin:2px 0 0}
+.band .tag{display:inline-block;background:#ffffff2e;border:1px solid #ffffff66;border-radius:999px;padding:1px 12px;font-size:14px;font-weight:700;margin-bottom:6px}
+.band svg{position:absolute;inset-inline-start:-18px;bottom:-26px;width:130px;opacity:.18}
+.rail a{border-top:4px solid var(--fc,var(--line))}
+.rail a.on{background:var(--fc,var(--ink));border-color:var(--fc,var(--ink));color:#fff}
+.blk{border-radius:12px;padding:12px 14px;margin:0 0 12px;border-inline-start:6px solid}
+.b-m{background:light-dark(#fff9db,#3a3418);border-color:#fab005}
+.b-a{background:light-dark(#e7f5ff,#16283a);border-color:#1c7ed6}
+.b-f{background:light-dark(#f3f0ff,#26203d);border-color:#7048e8}
+.b-c{background:light-dark(#f1f3f5,#222426);border-color:#343a40}
+.b-h{background:light-dark(#fff0f6,#3a1a29);border-color:#d6336c}
+.b-h .lbl{color:#d6336c}
+.hl .up{background:light-dark(#ebfbee,#16301d);border-inline-start:5px solid #2f9e44}.hl .up b{color:#2f9e44}
+.hl .dn{background:light-dark(#fff5f5,#3a1b1b);border-inline-start:5px solid #e03131}.hl .dn b{color:#e03131}
+.tm{font-weight:800}
+.forms.hide li{filter:blur(6px);user-select:none}
+.reveal{margin:8px 0 0;min-height:40px;font-size:15px}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:8px}
+.legend div{border-radius:10px;padding:10px 12px;color:#fff;background:var(--fc);font-weight:700}
+.legend small{display:block;font-weight:600;opacity:.9}
+.card{border-radius:16px;padding:22px;min-height:220px;color:#fff;background:var(--fc);display:flex;flex-direction:column;justify-content:center;gap:10px;text-align:center}
+.card .big{font:800 clamp(24px,5vw,34px)/1.15 Archivo,Cairo,sans-serif;direction:ltr}
+.card .back{background:#ffffffee;color:#141414;border-radius:10px;padding:12px;direction:ltr;font:700 18px Archivo,sans-serif}
+.boxes{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.boxes span{background:var(--card);border-radius:8px;padding:4px 12px;font-weight:700}
+.res.ok{background:light-dark(#d3f9d8,#173d20)}
+@media(max-width:600px){.hl{grid-template-columns:minmax(0,1fr)}input[type=text]{width:8em}.lcd{min-width:96px}}
+@media(prefers-reduced-motion:no-preference){.res{animation:pop .25s ease-out}@keyframes pop{from{transform:scale(.98);opacity:.4}}}
+
+.fam-desc{--fc:#2f9e44}.fam-disp{--fc:#d9480f}.fam-corr{--fc:#7048e8}.fam-samp{--fc:#1c7ed6}.fam-ai{--fc:#0c8599}.fam-cpt{--fc:#c2255c}.fam-graph{--fc:#e67700}
+.rail .lec{flex:none;align-self:center;font:800 12px Archivo,sans-serif;color:var(--mute);padding:0 2px 0 8px;border-inline-start:2px solid var(--line)}
+.legend div[onclick]:hover{filter:brightness(1.1)}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><h1>Statistical Analysis Practice · Lectures 1 → 5</h1><span class="prog" id="prog"></span></div>
+  <nav class="rail" id="rail" aria-label="Problems"></nav>
+</header>
+<main id="app"></main>
+<script>
+{
+const LECS={'L1-2':'المحاضرة 1 و 2: المفاهيم الأساسية والذكاء الاصطناعي','L3':'المحاضرة 3: الذكاء الاصطناعي وتطبيقاته','L4':'المحاضرة 4: التحليل الإحصائي للعينات','L5':'المحاضرة 5: تحليل الانحدار'};
+const FAMS={desc:['النزعة المركزية','Central tendency','البيانات متمركزة فين؟'],disp:['التشتت','Dispersion','البيانات متفرقة قد إيه؟'],corr:['الارتباط والانحدار','Correlation & regression','العلاقة بين متغيرين قد إيه وفي أنهي اتجاه؟'],samp:['العينات والتقدير','Sampling & estimation','إزاي العينة بتمثل المجتمع؟'],ai:['الذكاء الاصطناعي','Artificial intelligence','الآلة بتتعلم إزاي؟'],cpt:['مفاهيم وتصنيف','Concepts','نوع البيانات ومستوى قياسها'],graph:['الرسوم البيانية','Graphs','نشوف البيانات قبل ما نحسب']};
+const P=[
+/* ===================== LECTURES 1-2 ===================== */
+{id:'2-1',lec:'L1-2',fam:'disp',t:'Mean, variance, SD and CV',co:'Lecture 2 · Worked Example 1',
+m:'أبسط وصف لأي بيانات: الدرجات متمركزة فين (Mean)، ومتفرقة قد إيه حواليه (Variance و S و CV).',
+ab:[['x̄','Mean','الوسط الحسابي = مجموع القيم ÷ عددها'],['s²','Sample variance','التباين: بنقسم على n − 1 لأنها عينة'],['S','Standard deviation','الانحراف المعياري = جذر التباين'],['CV','Coefficient of Variation','معامل الاختلاف = S ÷ x̄ × 100']],
+hi:'CV عالي: البيانات متفرقة وغير مستقرة بالنسبة لوسطها.',lo:'CV واطي: البيانات متقاربة ومستقرة. في التشتت الأقل أحسن.',
+f:['x̄ = Σx ÷ n','s² = (Σx² − n·x̄²) ÷ (n − 1)','S = √s²','CV = S ÷ x̄ × 100'],
+c:[['[AC] 3 [+] 4 [+] 5 [+] 6 [+] 7 [=]','25.0000','Σx'],['[÷] 5 [=]','5.0000','x̄'],['[AC] 3 [x²] [+] 4 [x²] [+] 5 [x²] [+] 6 [x²] [+] 7 [x²] [=]','135.0000','Σx²'],['[AC] [(] 135 [−] 5 [×] 5 [x²] [)] [÷] 4 [=]','2.5000','s²'],['[√] [Ans] [=]','1.5811','S'],['[÷] 5 [×] 100 [=]','31.6228','CV %']],
+h:'التباين: «مربعات ناقص n في مربع الوسط، على n ناقص واحد».',
+q:'Test scores of 5 students are: 3, 4, 5, 6, 7. Find the mean, the variance, the standard deviation and the coefficient of variation.',
+b:[{lab:'Mean = Σx ÷ n',k:'f',p:[['Σx',25],['n',5]],r:['x̄',5]},
+{lab:'Variance = (Σx² − n·x̄²) ÷ (n − 1)',k:'f',p:[['Σx² − n·x̄²',10],['n − 1',4]],r:['s²',2.5]},
+{lab:'CV = S ÷ x̄ × 100',k:'f',p:[['S',1.5811],['x̄',5]],r:['CV (%)',31.62,{pc:1}]}],
+mo:'x̄ = 25 ÷ 5 = 5; Σx² = 135; s² = (135 − 125) ÷ 4 = 2.5; S = 1.581; CV = 1.581 ÷ 5 × 100 = 31.62%.',
+me:'الدرجات متمركزة حوالين 5، وبتبعد عنه في المتوسط 1.58 درجة، يعني التشتت حوالي 32% من الوسط.'},
+
+{id:'2-2',lec:'L1-2',fam:'disp',t:'Range, variance and CV',co:'Lecture 2 · Worked Example 2 (package weights)',
+m:'نفس فكرة المثال اللي فات، ومعاها المدى (Range)، وهتشوف ليه CV بيختلف حتى لو S هو هو.',
+ab:[['Range','المدى','أكبر قيمة − أصغر قيمة'],['s²','Sample variance','التباين'],['CV','Coefficient of Variation','التشتت كنسبة من الوسط']],
+hi:'CV أعلى من المثال اللي فات (52.7% مقابل 31.6%) مع إن S واحد: لأن الوسط هنا أصغر.',lo:'لو الوسط أكبر بنفس S، الـ CV بيقل والبيانات تبان أكثر استقرارًا.',
+f:['Range = Max − Min','s² = (Σx² − n·x̄²) ÷ (n − 1)','CV = S ÷ x̄ × 100'],
+c:[['[AC] 5 [−] 1 [=]','4.0000','المدى'],['[AC] [(] 55 [−] 5 [×] 3 [x²] [)] [÷] 4 [=]','2.5000','s²'],['[√] [Ans] [=]','1.5811','S'],['[÷] 3 [×] 100 [=]','52.7046','CV %']],
+h:'«نفس S بس CV مختلف»: لأن CV بيقسم على الوسط.',
+q:'Data (package weights): 1, 2, 3, 4, 5. Find the mean, the range, the variance, the standard deviation and the coefficient of variation.',
+b:[{lab:'Range = Max − Min',k:'o',p:[['Max',5],['Min',1]],ops:['−'],r:['Range',4]},
+{lab:'Variance = (Σx² − n·x̄²) ÷ (n − 1)',k:'f',p:[['Σx² − n·x̄²',10],['n − 1',4]],r:['s²',2.5]},
+{lab:'CV = S ÷ x̄ × 100',k:'f',p:[['S',1.5811],['x̄',3]],r:['CV (%)',52.7,{pc:1}]}],
+mo:'x̄ = 15 ÷ 5 = 3; Range = 4; Σx² = 55; s² = (55 − 45) ÷ 4 = 2.5; S = 1.581; CV = 52.7%. (The slide says 6 packages and divides by 6 − 1; only 5 values are listed, so n = 5.)',
+me:'نفس التشتت المطلق (S = 1.58) لكن نسبته من الوسط أكبر بكتير، يعني الأوزان دي أقل استقرارًا نسبيًا.'},
+
+{id:'2-3',lec:'L1-2',fam:'samp',t:'Standard error and the CLT',co:'Lecture 2 · Central Limit Theorem',
+m:'إزاي حجم العينة بيأثر في دقة تقدير الوسط (Sampling error).',
+ab:[['SE','Standard Error of the mean','الخطأ المعياري للوسط = σ ÷ √n'],['σ','Population SD','الانحراف المعياري للمجتمع'],['n','Sample size','حجم العينة'],['CLT','Central Limit Theorem','نظرية النهاية المركزية: متوسطات العينات بتتوزع طبيعي تقريبًا']],
+hi:'SE كبير: تقدير الوسط من العينة أقل دقة.',lo:'SE صغير: التقدير أدق. وبيقل كل ما n يكبر.',
+f:['SE = σ ÷ √n'],
+c:[['[AC] 20 [÷] [√] 100 [=]','2.0000','n = 100'],['[AC] 20 [÷] [√] 400 [=]','1.0000','n = 400']],
+h:'«تكبّر العينة 4 مرات، الخطأ يقل للنص»، لأن n تحت الجذر.',
+q:'If σ = 20, find the standard error of the mean for a sample of n = 100, and then for n = 400.',
+b:[{lab:'SE (n = 100) = σ ÷ √n',k:'f',p:[['σ',20],['√n',10]],r:['SE',2]},{lab:'SE (n = 400) = σ ÷ √n',k:'f',p:[['σ',20],['√n',20]],r:['SE',1]}],
+mo:'SE = 20 ÷ √100 = 20 ÷ 10 = 2. With n = 400: 20 ÷ 20 = 1. Quadrupling the sample halves the standard error.',
+me:'العينة الأكبر بتقلل خطأ المعاينة، لكن بالجذر: علشان تنص الخطأ لازم تضرب العينة في 4. وخلي بالك: الحجم بيقلل الخطأ، مش التحيز (مثال Literary Digest 1936).'},
+
+{id:'2-4',lec:'L1-2',fam:'desc',t:'Stock indices: DJIA and S&P 500',co:'Lecture 2 · Index examples',
+m:'إزاي مؤشرات البورصة بتتحسب، والفرق بين المرجّح بالسعر والمرجّح بالقيمة السوقية.',
+ab:[['DJIA','Dow Jones Industrial Average','مؤشر داو جونز: 30 سهم مرجّحة بالسعر'],['S&P 500','Standard & Poor’s 500','500 شركة مرجّحة بالقيمة السوقية للأسهم الحرة'],['D','Divisor','المقسوم اللي بيتعدّل علشان المؤشر يفضل متصل']],
+hi:'المؤشر طالع: أسعار الأسهم المكوّنة له في المجمل زادت.',lo:'المؤشر نازل: السوق في المجمل بيخسر.',
+f:['Index = Σ(Pᵢ·Fᵢ) ÷ D'],
+c:[['[AC] 4500 [÷] 0.15 [=]','30000.0000','DJIA'],['[AC] 48500 [÷] 8.38 [=]','5787.5895','S&P 500']],
+h:'«داو = سعر، S&P = حجم الشركة».',
+q:'(a) The adjusted sum of the DJIA stock prices is 4,500 and the Dow divisor is 0.15. Find the index. (b) For the S&P 500 the weighted sum is 48,500 and the divisor is 8.38. Find the index. (c) Which index is price-weighted?',
+b:[{lab:'DJIA = Σ(P·F) ÷ D',k:'f',p:[['Σ(P·F)',4500],['D',0.15]],r:['DJIA',30000]},{lab:'S&P 500 = Σ(P·F) ÷ D',k:'f',p:[['Σ(P·F)',48500],['D',8.38]],r:['S&P 500',5787.59]},{lab:'(c) Which index is price-weighted?',k:'q',o:['DJIA','S&P 500','Both','Neither'],a:0}],
+mo:'(a) 4,500 ÷ 0.15 = 30,000. (b) 48,500 ÷ 8.38 ≈ 5,788. (c) DJIA is price-weighted; S&P 500 is market-cap-weighted. The slide figures are illustrative, not official values.',
+me:'في داو السهم الغالي بيأثر أكتر، وفي S&P الشركة الكبيرة هي اللي بتأثر أكتر.'},
+
+{id:'2-5',lec:'L1-2',fam:'ai',t:'Neuron output: Example 1',co:'Lecture 2 / 3 · Slide 60',
+m:'إزاي الخلية العصبية (Neuron) بتحسب ناتجها من المدخلات والأوزان.',
+ab:[['Y','Output','الناتج'],['b','Bias','الانحياز، رقم ثابت بيتزوّد'],['w','Weights','الأوزان: أهمية كل مدخل'],['x','Inputs','المدخلات'],['Σ','Sum','مجموع']],
+hi:'لو ناتج الشبكة أكبر من الإجابة الصح يبقى فيه تحيّز لفوق، والشبكة بتعدّل w و b.',lo:'لو أقل، يبقى تحيّز لتحت. التعديل ده اسمه Training.',
+f:['Y = b + Σ wᵢ·xᵢ'],
+c:[['[AC] 1 [×] 5 [+] 2 [×] 1 [+] 3 [×] 4 [+] 5 [×] 2 [+] 4 [×] 1 [=]','33.0000','Σwx (الآلة بتضرب الأول)'],['[+] 2 [=]','35.0000','Y']],
+h:'«اضرب كل وزن في مدخله، اجمع، وزوّد الـ bias».',
+q:'A neuron has weights w = [1, 2, 3, 5, 4], inputs x = [5, 1, 4, 2, 1] and a linear transfer function with b = 2. Find the output Y = b + Σwᵢxᵢ.',
+b:[{lab:'Σwx = w₁x₁ + w₂x₂ + w₃x₃ + w₄x₄ + w₅x₅',k:'o',p:[['1×5',5],['2×1',2],['3×4',12],['5×2',10],['4×1',4]],ops:['+','+','+','+'],r:['Σwx',33]},{lab:'Y = b + Σwx',k:'o',p:[['b',2],['Σwx',33]],ops:['+'],r:['Y',35]}],
+mo:'Σwx = 5 + 2 + 12 + 10 + 4 = 33; Y = 2 + 33 = 35.',
+me:'الخلية جمعت المدخلات بأوزانها (33) وزوّدت الانحياز (2) فطلعت 35.'},
+
+{id:'2-6',lec:'L1-2',fam:'ai',t:'Neuron output: Example 2',co:'Lecture 2 / 3 · Slide 61',
+m:'تدريب تاني على حساب ناتج الخلية العصبية.',
+ab:[['Y','Output','الناتج'],['b','Bias','الانحياز'],['w','Weights','الأوزان'],['x','Inputs','المدخلات']],
+hi:'وزن أكبر يعني إن المدخل ده تأثيره أكبر على الناتج.',lo:'وزن صغير أو صفر يعني المدخل تأثيره ضعيف أو مالوش تأثير.',
+f:['Y = b + Σ wᵢ·xᵢ'],
+c:[['[AC] 1 [×] 4 [+] 2 [×] 3 [+] 3 [×] 2 [+] 4 [×] 1 [=]','20.0000','Σwx'],['[+] 3 [=]','23.0000','Y']],
+h:'نفس الطريقة: «ضرب، جمع، bias».',
+q:'A neuron has weights w = [1, 2, 3, 4], inputs x = [4, 3, 2, 1] and b = 3. Find the output.',
+b:[{lab:'Σwx',k:'o',p:[['1×4',4],['2×3',6],['3×2',6],['4×1',4]],ops:['+','+','+'],r:['Σwx',20]},{lab:'Y = b + Σwx',k:'o',p:[['b',3],['Σwx',20]],ops:['+'],r:['Y',23]}],
+mo:'Σwx = 4 + 6 + 6 + 4 = 20; Y = 3 + 20 = 23.',me:'الناتج 23.'},
+
+{id:'2-7',lec:'L1-2',fam:'samp',t:'Sampling methods and types of statistics',co:'Lecture 2 · Check questions',
+m:'تفرّق بين طرق المعاينة الأربعة، وبين الإحصاء الوصفي والاستدلالي.',
+ab:[['Simple random','عشوائية بسيطة','كل مفردة ليها نفس فرصة الاختيار'],['Systematic','منتظمة','بداية عشوائية وبعدين كل k مفردة'],['Stratified','طبقية','نقسّم لطبقات ونسحب من كل طبقة'],['Cluster','عنقودية','نختار عناقيد قليلة عشوائيًا'],['Descriptive / Inferential','وصفي / استدلالي','وصف البيانات / تعميم من العينة للمجتمع']],
+hi:'طبقية = «من كل طبقة»، عنقودية = «بعض العناقيد بس».',lo:'لو بتحسب وتلخّص بس يبقى وصفي، ولو بتعمّم أو تختبر فرق يبقى استدلالي.',
+f:['Systematic: random start, then every kth item'],c:[],
+h:'«كل خامس فاتورة» = منتظمة. «من كل محافظة» = طبقية.',
+q:'Answer the check questions from the slides.',
+b:[{lab:'Q1. We select every fifth invoice in a file. Which sampling type is this?',k:'q',o:['Simple random','Cluster','Stratified random','Systematic'],a:3},
+{lab:'Q2. We divide the population into subgroups and take a random sample from each subgroup. Which type?',k:'q',o:['Cluster','Stratified random','Systematic','Convenience'],a:1},
+{lab:'Q3. Crash tests use only one or two cars. Why a sample instead of a census?',k:'q',o:['The test destroys the item','Cars are identical','The population is unknown','It increases bias'],a:0},
+{lab:'Q4. Computing the mean score of 100 students is…',k:'q',o:['Descriptive statistics','Inferential statistics','Predictive statistics','Not statistics'],a:0},
+{lab:'Q5. Testing whether males and females differ significantly in their average score is…',k:'q',o:['Descriptive statistics','Inferential statistics','Data mining','A census'],a:1}],
+mo:'Q1 Systematic · Q2 Stratified random · Q3 destructive testing · Q4 Descriptive · Q5 Inferential.',
+me:'المهم تعرف الكلمة المفتاحية في كل سؤال: «كل خامس» منتظمة، «من كل مجموعة» طبقية، «اختبار فرق» استدلالي.'},
+
+{id:'2-8',lec:'L1-2',fam:'cpt',t:'Variables and levels of measurement',co:'Lecture 2 · Section 4',
+m:'تصنيف المتغيرات (وصفي أو كمي، منفصل أو متصل) ومستويات القياس الأربعة.',
+ab:[['Qualitative','وصفي','غير رقمي (اللون، النوع)'],['Quantitative','كمي','رقم نحسب عليه'],['Discrete','منفصل','بيتعد: 1، 2، 3'],['Continuous','متصل','بيتقاس: أي قيمة في مدى'],['Nominal / Ordinal / Interval / Ratio','اسمي / ترتيبي / فئوي / نسبي','من الأقل للأعلى']],
+hi:'كل ما مستوى القياس يعلى، تقدر تعمل تحليل أكتر (Ratio أعلى مستوى).',lo:'Nominal أقل مستوى: أسماء بس، والإحصاء المناسب ليه هو المنوال.',
+f:['Nominal → Ordinal → Interval → Ratio'],c:[],
+h:'«اسم، ترتيب، مسافة، صفر حقيقي»: كل مستوى بيزوّد ميزة على اللي قبله.',
+q:'Classify each variable.',
+b:[{lab:'Eye colour is…',k:'q',o:['Qualitative, nominal','Quantitative, discrete','Quantitative, continuous','Ordinal'],a:0},
+{lab:'Number of bedrooms in a house is…',k:'q',o:['Continuous','Discrete','Nominal','Interval'],a:1},
+{lab:'Tire pressure is…',k:'q',o:['Discrete','Continuous','Nominal','Ordinal'],a:1},
+{lab:'A satisfaction rank on a Likert scale is measured at the … level.',k:'q',o:['Nominal','Ordinal','Interval','Ratio'],a:1},
+{lab:'Temperature in Celsius is measured at the … level.',k:'q',o:['Nominal','Ordinal','Interval','Ratio'],a:2},
+{lab:'Income is measured at the … level.',k:'q',o:['Nominal','Ordinal','Interval','Ratio'],a:3}],
+mo:'Eye colour: qualitative nominal · bedrooms: discrete · tire pressure: continuous · Likert: ordinal · Celsius: interval (no true zero) · income: ratio (true zero).',
+me:'سؤال الامتحان المعتاد: صنّف المتغير. اسأل: ينفع أحسب متوسطه؟ وبيتعد ولا بيتقاس؟ وفيه صفر حقيقي؟'},
+
+/* ===================== LECTURE 3 ===================== */
+{id:'3-1',lec:'L3',fam:'ai',t:'Neuron output: practice and Q25',co:'Lecture 3 · Self-test Q2 and HW Q25',
+m:'تثبيت طريقة حساب ناتج الخلية، وتجنّب «فخ» الـ 300 في السؤال 25.',
+ab:[['Y','Output','الناتج'],['b','Bias / constant','الثابت اللي بيتجمع'],['w','Weights','الأوزان'],['x','Inputs','المدخلات']],
+hi:'لو طلع لك 300 في السؤال 25، يبقى ضربت الثابت 10 في المجموع بدل ما تجمعه.',lo:'الطريقة اللي اتشرحت: Y = b + Σwx، يعني الثابت بيتجمع.',
+f:['Y = b + Σ wᵢ·xᵢ'],
+c:[['[AC] 2 [×] 1 [+] 1 [×] 5 [+] 3 [×] 2 [+] 4 [=]','17.0000','Self-test Q2'],['[AC] 1 [×] 10 [+] 2 [×] 5 [+] 5 [×] 2 [+] 10 [=]','40.0000','Q25']],
+h:'«الـ bias بيتجمع، مش بيتضرب».',
+q:'(a) w = [2, 1, 3], b = 4, x = [1, 5, 2]. Find Y. (b) Q25: a 3-input neuron has weights [1, 2, 5], a linear transfer function with constant 10, and inputs [10, 5, 2]. What is the output?',
+b:[{lab:'(a) Y = b + Σwx',k:'o',p:[['b',4],['Σwx',13]],ops:['+'],r:['Y',17]},{lab:'(b) Y = b + Σwx',k:'o',p:[['b',10],['Σwx',30]],ops:['+'],r:['Y',40]}],
+mo:'(a) Σwx = 2 + 5 + 6 = 13; Y = 17. (b) Σwx = 10 + 10 + 10 = 30; Y = 10 + 30 = 40 (an app that multiplies, 10 × 30 = 300, reads «constant of proportionality» differently; follow the lecture formula).',
+me:'نفس القانون في كل الأمثلة، فاحفظه بالظبط زي ما الدكتور كتبه.'},
+
+{id:'3-2',lec:'L3',fam:'ai',t:'AI concepts: learning, layers, methods',co:'Lecture 3 · Slides 54–69',
+m:'مفاهيم الذكاء الاصطناعي اللي بتيجي في الامتحان كأسئلة اختيار.',
+ab:[['ANN','Artificial Neural Networks','الشبكات العصبية'],['GA','Genetic Algorithms','الخوارزميات الجينية'],['DM','Data Mining','التنقيب في البيانات'],['ES','Expert Systems','النظم الخبيرة'],['ML ⊃ DL','Machine / Deep Learning','التعلم الآلي / العميق']],
+hi:'إشرافي (Supervised): ليه إجابات صح، يعني تصنيف أو انحدار.',lo:'غير إشرافي (Unsupervised): من غير إجابات، يعني عنقدة أو اختزال أبعاد.',
+f:['AI ⊃ ML ⊃ DL','Supervised: classification (discrete) · regression (continuous)','Unsupervised: clustering (discrete) · dimensionality reduction (continuous)'],c:[],
+h:'الفروع الأربعة: «شبكات، جينات، تنقيب، خبراء».',
+q:'Choose the correct answer.',
+b:[{lab:'Grouping mixed photos into humans, animals and plants with no labels is…',k:'q',o:['Classification','Regression','Clustering','Expert system'],a:2},
+{lab:'Reducing 70 socio-economic variables into about 5 groups is…',k:'q',o:['Dimensionality reduction','Classification','Genetic algorithm','Regression'],a:0},
+{lab:'The three layers of a neural network are…',k:'q',o:['Input, hidden, output','Data, model, report','Train, test, predict','Bias, weight, error'],a:0},
+{lab:'Which is NOT one of the four AI methods named in the lecture?',k:'q',o:['ANN','Genetic algorithms','Linear regression','Expert systems'],a:2},
+{lab:'Modern ChatGPT is built on…',k:'q',o:['CNN','RNN','Transformers','Naive Bayes'],a:2},
+{lab:'A system of IF … THEN rules written by human experts is…',k:'q',o:['An expert system','Data mining','Deep learning','A genetic algorithm'],a:0}],
+mo:'Clustering · dimensionality reduction · input, hidden, output · linear regression is not one of the four (ANN, GA, DM, ES) · Transformers · expert system.',
+me:'افتكر الجدول: الإشرافي ليه مُعلّم (إجابات)، وغير الإشرافي بيلاقي المجموعات لوحده.'},
+
+{id:'3-3',lec:'L3',fam:'ai',t:'Ways to use AI, NLP, pros and cons',co:'Lecture 3 · Slides 70–84',
+m:'الطرق الأربعة لاستخدام الذكاء الاصطناعي، ومكونات NLP، ومزايا وعيوب التطبيقات.',
+ab:[['Applications','تطبيقات','ChatGPT, Claude, Gemini'],['Tools','أدوات','أداة جوه برنامج: SPSS, MATLAB'],['Packages','حزم','Weka, Hadoop, NeuroShell'],['Programming','برمجة','Python, R, C++'],['NLP','Natural Language Processing','معالجة اللغة الطبيعية: فهم، توليد، معالجة']],
+hi:'أهم ميزتين في رأي الدكتور: القابلية للتعلم، ومعالجة اللغة الطبيعية.',lo:'أهم عيب: التحيز («اللي يدخل زبالة يطلع زبالة»)، والأخطاء أو الهلوسة.',
+f:['Applications → Tools → Packages → Programming'],c:[],
+h:'«تطبيق، أداة، حزمة، برمجة» من الأسهل للأصعب.',
+q:'Choose the correct answer.',
+b:[{lab:'An AI toolbox inside SPSS or MATLAB is an AI…',k:'q',o:['Application','Tool','Package','Programming language'],a:1},
+{lab:'Weka and Apache Hadoop are AI…',k:'q',o:['Applications','Tools','Packages','Expert systems'],a:2},
+{lab:'The three components of NLP are…',k:'q',o:['Understanding, generation, processing','Input, hidden, output','Selection, mutation, crossover','Mean, median, mode'],a:0},
+{lab:'A CV-screening AI trained only on past male hires rejects women. This disadvantage is…',k:'q',o:['High cost','Bias','Loss of control','Lack of data'],a:1},
+{lab:'Does ChatGPT rely on statistics?',k:'q',o:['Yes: probability and predicting the most likely next token','No, only on expert rules','No, only on genetic algorithms','Only on t-tests and regression'],a:0}],
+mo:'Tool · Packages · understanding, generation, processing · bias · yes, probabilistic next-token prediction (Softmax, likelihood, gradient descent), not explicit regression or t-tests.',
+me:'هدف المادة إنك تبقى مستخدم محترف للذكاء الاصطناعي في تحليل البيانات، مش مبرمج.'},
+
+/* ===================== LECTURE 4 ===================== */
+{id:'4-1',lec:'L4',fam:'cpt',t:'Ex.1–Ex.3: variables and true/false',co:'Lecture 4 · Slides 9–12',
+m:'تصنيف المتغيرات زي ما اتحل في المحاضرة، ومفاهيم التقدير والمعاينة.',
+ab:[['Statistic','إحصاءة','رقم من العينة (x̄، S²)'],['Parameter','معلمة','رقم المجتمع (μ، σ²)'],['Point estimate','تقدير بنقطة','رقم واحد بيقدّر المعلمة'],['Range','المدى','بيتأثر جدًا بالقيم المتطرفة']],
+hi:'العينة العشوائية المختارة صح بتدي تقدير قريب من المجتمع.',lo:'أقل حجم عينة في التحليل الكلاسيكي 30.',
+f:['Statistic (sample) → estimates → Parameter (population)','S² → σ² · x̄ → μ'],c:[],
+h:'«رقم الطالب وصفي» لأنه بيميّز زي الاسم، ومحدش بيجيب متوسطه.',
+q:'Answer the questions from Ex.1, Ex.2 and Ex.3.',
+b:[{lab:'Ex.1: A student ID number is…',k:'q',o:['Qualitative','Quantitative, discrete','Quantitative, continuous','Ratio'],a:0},
+{lab:'Ex.1: The number of flowers is…',k:'q',o:['Qualitative','Quantitative (discrete)','Continuous','Nominal'],a:1},
+{lab:'Ex.2: Weight is…',k:'q',o:['Discrete','Continuous','Nominal','Ordinal'],a:1},
+{lab:'Ex.2: The count of integers in (−b, b) is…',k:'q',o:['Discrete','Continuous','Qualitative','Interval'],a:0},
+{lab:'Ex.3: «The range is not sensitive to extreme values.»',k:'q',o:['True','False'],a:1},
+{lab:'Ex.3: «The sample variance S² estimates the population variance σ².»',k:'q',o:['True','False'],a:0},
+{lab:'Ex.3: «A statistic estimates a population parameter with a single number.»',k:'q',o:['True','False'],a:0},
+{lab:'Minimum sample size in classical analysis (doctor’s rule):',k:'q',o:['10','30','100','500'],a:1}],
+mo:'Qualitative · quantitative discrete · continuous · discrete · False (range uses only max and min) · True · True (point estimate) · 30.',
+me:'أسئلة صح وغلط والتصنيف دي «درجات سهلة» في الامتحان، بس محتاجة دقة في الكلمات.'},
+
+{id:'4-2',lec:'L4',fam:'graph',t:'Ex.4 & Ex.5: pie chart and histogram',co:'Lecture 4 · Slides 14–15',
+m:'إزاي نحوّل التكرارات لزوايا في الدائرة البيانية، وإزاي نجيب مركز الفئة للمدرج التكراري.',
+ab:[['Pie chart','الدائرة البيانية','أجزاء من كل'],['Histogram','المدرج التكراري','شكل التوزيع على فئات مرتبة'],['Frequency','التكرار','عدد المرات'],['Midpoint','مركز الفئة','(بداية الفئة + نهايتها) ÷ 2']],
+hi:'زاوية أكبر = نصيب أكبر من الكل.',lo:'لازم مجموع الزوايا يطلع 360°، لو مش 360 راجع الحساب.',
+f:['Angle = (frequency ÷ total) × 360°','Midpoint = (lower + upper) ÷ 2'],
+c:[['[AC] 6 [÷] 32 [×] 360 [=]','67.5000','A'],['[AC] 10 [÷] 32 [×] 360 [=]','112.5000','B'],['[AC] 7 [÷] 32 [×] 360 [=]','78.7500','C'],['[AC] 9 [÷] 32 [×] 360 [=]','101.2500','D'],['[AC] [(] 0 [+] 10 [)] [÷] 2 [=]','5.0000','مركز الفئة 0–10']],
+h:'«التكرار على المجموع، في 360».',
+q:'Ex.4: Grades A, B, C, D have frequencies 6, 10, 7 and 9. Find the pie-chart angle of each grade. Ex.5: Find the midpoint of the class 0–10.',
+b:[{lab:'Angle A = (f ÷ total) × 360',k:'x',p:[['f ÷ total',0.1875],['360',360]],r:['Angle A (°)',67.5]},
+{lab:'Angle B',k:'x',p:[['f ÷ total',0.3125],['360',360]],r:['Angle B (°)',112.5]},
+{lab:'Angle C',k:'x',p:[['f ÷ total',0.21875],['360',360]],r:['Angle C (°)',78.75]},
+{lab:'Angle D',k:'x',p:[['f ÷ total',0.28125],['360',360]],r:['Angle D (°)',101.25]},
+{lab:'Ex.5: Midpoint = (lower + upper) ÷ 2',k:'f',p:[['lower + upper',10],['2',2]],r:['Midpoint',5]}],
+mo:'Total = 32. A = 67.5°, B = 112.5°, C = 78.75°, D = 101.25° (sum 360°). Midpoint of 0–10 = 5. Histogram bar heights = frequencies 4, 10, 16, 12, 8 (use 16, not 18).',
+me:'الدائرة للأجزاء من الكل، والمدرج لشكل التوزيع. والرسم بيدّي استكشاف مبدئي للبيانات بلغة يفهمها أي حد.'},
+
+{id:'4-3',lec:'L4',fam:'desc',t:'Ex.9 (a): mean, median, mode',co:'Lecture 4 · Slides 18–19 · «ممكن ييجي في الامتحان»',
+m:'مقاييس النزعة المركزية: البيانات متمركزة فين.',
+ab:[['x̄','Mean','الوسط = Σx ÷ n'],['Q2','Median','الوسيط: القيمة اللي في النص بعد الترتيب'],['Mode','المنوال','القيمة الأكثر تكرارًا'],['n','Sample size','عدد القيم']],
+hi:'الوسط أكبر من الوسيط (8.3 > 7): فيه قيمة كبيرة (19) شدّت الوسط لفوق.',lo:'الوسيط والمنوال مش بيتأثروا بالقيمة الشاذة زي الوسط.',
+f:['x̄ = Σx ÷ n','n even: Q2 = average of ranks n/2 and n/2 + 1','n odd: Q2 = value at rank (n + 1)/2'],
+c:[['[AC] 9 [+] 3 [+] 8 [+] 7 [+] 19 [+] 14 [+] 7 [+] 5 [+] 4 [+] 7 [=]','83.0000','Σx'],['[÷] 10 [=]','8.3000','x̄'],['[AC] [(] 7 [+] 7 [)] [÷] 2 [=]','7.0000','الوسيط (القيمة 5 و 6 بعد الترتيب)']],
+h:'«رتّب الأول، وبعدين دوّر على النص».',
+q:'Ex.9: The data are 9, 3, 8, 7, 19, 14, 7, 5, 4, 7. (a) Find the mean, the median and the mode.',
+b:[{lab:'Mean = Σx ÷ n',k:'f',p:[['Σx',83],['n',10]],r:['x̄',8.3]},{lab:'Median = (x₅ + x₆) ÷ 2 (sorted)',k:'f',p:[['x₅ + x₆',14],['2',2]],r:['Median',7]},{lab:'Mode',k:'n',r:['Mode',7]}],
+mo:'Σx = 83, x̄ = 8.3. Sorted: 3, 4, 5, 7, 7, 7, 8, 9, 14, 19 → median = (7 + 7)/2 = 7. Mode = 7 (appears 3 times).',
+me:'البيانات متمركزة حوالين 7، والوسط 8.3 أعلى شوية بسبب القيمة 19.'},
+
+{id:'4-4',lec:'L4',fam:'disp',t:'Ex.9 (b): Q1, Q3, range, IQR',co:'Lecture 4 · Slide 20',
+m:'الربيعات والمدى والمدى الربيعي: التشتت حوالين النص.',
+ab:[['Q1','First quartile','الربيع الأدنى: 25% من القيم تحته'],['Q3','Third quartile','الربيع الأعلى: 75% تحته'],['Range','المدى','أكبر − أصغر'],['IQR','Interquartile range','المدى الربيعي = Q3 − Q1 (النص اللي في الوسط)']],
+hi:'Range كبير بالنسبة لـ IQR (16 مقابل 4): فيه قيمة متطرفة بتمطّ المدى.',lo:'IQR مش بيتأثر بالقيمة المتطرفة لأنه بيغطي الـ 50% اللي في النص بس.',
+f:['rank(Q1) = n/4','rank(Q3) = 3n/4','Range = Max − Min','IQR = Q3 − Q1'],
+c:[['[AC] 10 [÷] 4 [=]','2.5000','ترتيب Q1 = بين الـ 2 والـ 3'],['[AC] [(] 4 [+] 5 [)] [÷] 2 [=]','4.5000','Q1'],['[AC] [(] 8 [+] 9 [)] [÷] 2 [=]','8.5000','Q3'],['[AC] 19 [−] 3 [=]','16.0000','Range'],['[AC] 8.5 [−] 4.5 [=]','4.0000','IQR']],
+h:'تلات خطوات لأي ربيع: «رتّب، احسب الترتيب، هات القيمة».',
+q:'Ex.9 (b): Using the same data (3, 4, 5, 7, 7, 7, 8, 9, 14, 19 after sorting), find Q1, Q3, the range and the IQR.',
+b:[{lab:'Q1 = (x₂ + x₃) ÷ 2',k:'f',p:[['x₂ + x₃',9],['2',2]],r:['Q1',4.5]},{lab:'Q3 = (x₇ + x₈) ÷ 2',k:'f',p:[['x₇ + x₈',17],['2',2]],r:['Q3',8.5]},{lab:'Range = Max − Min',k:'o',p:[['Max',19],['Min',3]],ops:['−'],r:['Range',16]},{lab:'IQR = Q3 − Q1',k:'o',p:[['Q3',8.5],['Q1',4.5]],ops:['−'],r:['IQR',4]}],
+mo:'rank(Q1) = 2.5 → (4 + 5)/2 = 4.5; rank(Q3) = 7.5 → (8 + 9)/2 = 8.5; Range = 19 − 3 = 16; IQR = 8.5 − 4.5 = 4.',
+me:'نص البيانات اللي في الوسط محصور في 4 وحدات بس، لكن المدى كله 16 بسبب الـ 19. نفس فكرة تقسيم النسب دي هي فكرة باريتو 80/20.'},
+
+{id:'4-5',lec:'L4',fam:'disp',t:'Ex.9 (c): variance and SD (corrected)',co:'Lecture 4 · Slide 21 · فيه تصحيح',
+m:'التباين والانحراف المعياري للعينة، مع تصحيح غلطة السلايد (19² = 361 مش 381).',
+ab:[['Σx²','Sum of squares','مجموع مربعات القيم'],['n·x̄²','','n × مربع الوسط'],['S²','Sample variance','التباين (على n − 1)'],['S','Standard deviation','الجذر الموجب للتباين']],
+hi:'S كبير بالنسبة للوسط: البيانات متفرقة.',lo:'S صغير: القيم قريبة من الوسط. ولو كل القيم متساوية S = صفر.',
+f:['S² = (Σx² − n·x̄²) ÷ (n − 1)','S = √S²'],
+c:[['[AC] 81 [+] 9 [+] 64 [+] 49 [+] 361 [+] 196 [+] 49 [+] 25 [+] 16 [+] 49 [=]','899.0000','Σx²'],['[AC] 10 [×] 8.3 [x²] [=]','688.9000','n·x̄²'],['[AC] [(] 899 [−] 688.9 [)] [÷] 9 [=]','23.3444','S²'],['[√] [Ans] [=]','4.8316','S']],
+h:'«بنقسم على n − 1 علشان دي عينة»: تقدير أفضل لـ σ².',
+q:'Ex.9 (c): For the data 9, 3, 8, 7, 19, 14, 7, 5, 4, 7 (x̄ = 8.3), find the variance and the standard deviation.',
+b:[{lab:'Σx²',k:'n',r:['Σx²',899]},{lab:'n·x̄² = n × x̄²',k:'x',p:[['n',10],['x̄²',68.89]],r:['n·x̄²',688.9]},{lab:'S² = (Σx² − n·x̄²) ÷ (n − 1)',k:'f',p:[['Σx² − n·x̄²',210.1],['n − 1',9]],r:['S²',23.344]},{lab:'S = √S²',k:'n',r:['S',4.832]}],
+mo:'Σx² = 899 (the slide wrote 19² = 381, giving 919; correct is 361). n·x̄² = 688.9. S² = 210.1 ÷ 9 = 23.344; S = 4.832. (Slide values: S² 25.567, S 5.056.)',
+me:'القيم بتبعد عن الوسط في المتوسط حوالي 4.8 وحدة. في الامتحان اكتب الحل الصح، والطريقة هي هي.'},
+
+{id:'4-6',lec:'L4',fam:'disp',t:'Ex.9 (d–f): z-score, CV, outliers',co:'Lecture 4 · Slide 22',
+m:'الدرجة المعيارية (z) بتقيس بُعد قيمة عن الوسط، ومعامل الاختلاف بيقيس التشتت النسبي، ونكشف القيم الشاذة.',
+ab:[['z','Standard score','الدرجة المعيارية = (x − x̄) ÷ S'],['CV','Coefficient of Variation','S ÷ x̄ × 100'],['Outlier','قيمة شاذة','قيمة بعيدة عن باقي البيانات'],['Fence','حد توكي','Q3 + 1.5 × IQR (إضافة للمراجعة)']],
+hi:'z موجب: القيمة فوق الوسط. وأغلب القيم بتبقى بين −3 و +3.',lo:'z سالب: تحت الوسط. وCV أصغر = بيانات أكثر استقرارًا (اختار السهم اللي CV بتاعه أقل).',
+f:['z = (x − x̄) ÷ S','CV = S ÷ x̄ × 100','Upper fence = Q3 + 1.5 × IQR'],
+c:[['[AC] [(] 14 [−] 8.3 [)] [÷] 4.832 [=]','1.1796','z(14)'],['[AC] 4.832 [÷] 8.3 [×] 100 [=]','58.2169','CV %'],['[AC] 8.5 [+] 1.5 [×] 4 [=]','14.5000','الحد الأعلى']],
+h:'z «بيشيل الوحدة»: يحوّل الجنيه والدولار لعدد انحرافات معيارية، فتقدر تقارن.',
+q:'Ex.9 (d) Find the standard score of 14. (e) Find the coefficient of variation. (f) Are there outliers? (Use S = 4.832.)',
+b:[{lab:'z = (x − x̄) ÷ S',k:'f',p:[['x − x̄',5.7],['S',4.832]],r:['z',1.18]},{lab:'CV = S ÷ x̄ × 100',k:'f',p:[['S',4.832],['x̄',8.3]],r:['CV (%)',58.22,{pc:1}]},{lab:'Upper fence = Q3 + 1.5 × IQR',k:'o',p:[['Q3',8.5],['1.5 × IQR',6]],ops:['+'],r:['Upper fence',14.5]},{lab:'(f) The outlier is…',k:'q',o:['14','19','14 and 19','None'],a:1}],
+mo:'z(14) = 5.7 ÷ 4.832 = 1.180; CV = 58.2%; fences −1.5 and 14.5 → only 19 is an outlier. (With the slide’s S = 5.056: z = 1.127, CV = 60.9%.)',
+me:'الـ 14 فوق الوسط بحوالي 1.2 انحراف معياري، والتشتت النسبي عالي (58%) بسبب القيمة الشاذة 19. متشيلهاش إلا لو السؤال طلب.'},
+
+{id:'4-7',lec:'L4',fam:'disp',t:'Ex.10: reading computer output',co:'Lecture 4 · Slide 23',
+m:'قراءة مخرجات برنامج (Minitab/SPSS) وتلخيص التحليل الوصفي في 3 بلوكات.',
+ab:[['N','Sample size','حجم العينة: أول حاجة تكتبها'],['Location','مقاييس التموضع','Mean, Median, Mode, Min, Q1, Q3, Max'],['Scale','مقاييس التشتت','Range, IQR, S², S, CV']],
+hi:'CV أكبر من 100% لبيانات زي دي يبقى فيه غلط، راجع.',lo:'S عادة أصغر من الوسط في بيانات زي دي، ولو مش كده افحص البيانات.',
+f:['Range = Max − Min','IQR = Q3 − Q1','CV = S ÷ x̄ × 100'],
+c:[['[AC] 20 [−] 1 [=]','19.0000','Range'],['[AC] 8.25 [−] 3.75 [=]','4.5000','IQR'],['[AC] 4.88 [÷] 7 [×] 100 [=]','69.7143','CV %'],['[AC] 8.25 [+] 1.5 [×] 4.5 [=]','15.0000','الحد الأعلى']],
+h:'«حجم، تموضع، تشتت»: تلات بلوكات لأي مخرجات.',
+q:'Ex.10: Output for X1: N = 12, Mean = 7, Median = 7, Mode = 7, Min = 1, Q1 = 3.75, Q3 = 8.25, Max = 20, S = 4.88. Find the range, the IQR and the CV, and check for outliers.',
+b:[{lab:'Range = Max − Min',k:'o',p:[['Max',20],['Min',1]],ops:['−'],r:['Range',19]},{lab:'IQR = Q3 − Q1',k:'o',p:[['Q3',8.25],['Q1',3.75]],ops:['−'],r:['IQR',4.5]},{lab:'CV = S ÷ x̄ × 100',k:'f',p:[['S',4.88],['x̄',7]],r:['CV (%)',69.71,{pc:1}]},{lab:'Is Max = 20 an outlier (upper fence 15)?',k:'q',o:['Yes','No'],a:0}],
+mo:'n = 12 · Location: mean 7, median 7, mode 7, min 1, Q1 3.75, Q3 8.25, max 20 · Scale: range 19, IQR 4.5, S² 23.78, S 4.88, CV 69.7% · Upper fence 15 → 20 is an outlier.',
+me:'في الامتحان ممكن ييجي output جاهز ويتقال «لخّص التحليل الوصفي»، فرتّب إجابتك في التلات بلوكات.'},
+
+{id:'4-8',lec:'L4',fam:'corr',t:'Ex.11: Pearson r = −1 and R²',co:'Lecture 4 · Slides 24–27',
+m:'قوة واتجاه العلاقة الخطية بين متغيرين (r)، ونسبة اللي x بيفسره من تغيّرات y (R²).',
+ab:[['r','Pearson correlation','معامل الارتباط بين −1 و +1'],['R²','Coefficient of determination','معامل التحديد = r²'],['Σxy','','مجموع حاصل ضرب x في y'],['n','','عدد الأزواج']],
+hi:'|r| ≥ 0.9 قوي جدًا، 0.7–0.9 قوي. الإشارة + طردي، − عكسي.',lo:'|r| < 0.4 ضعيف. وR² صغير معناه إن x بيفسر جزء صغير من y.',
+f:['r = (nΣxy − ΣxΣy) ÷ √{[nΣx² − (Σx)²][nΣy² − (Σy)²]}','R² = r²'],
+c:[['[AC] 10 [×] 480 [−] 75 [×] 75 [=]','−825.0000','البسط'],['[AC] 10 [×] 645 [−] 75 [x²] [=]','825.0000','جزء x (وجزء y نفس الرقم)'],['[AC] [(−)] 825 [÷] [√] 825 [×] 825 [=]','−1.0000','r'],['[x²] [=]','1.0000','R²']],
+h:'«الإشارة للاتجاه، والرقم للقوة، والتربيع للتفسير».',
+q:'Ex.11: For 10 students, statistics quiz marks (x) and mathematics quiz marks (y) give Σx = 75, Σy = 75, Σx² = 645, Σy² = 645, Σxy = 480. Find r and R² and interpret.',
+b:[{lab:'Numerator = nΣxy − ΣxΣy',k:'o',p:[['nΣxy',4800],['ΣxΣy',5625]],ops:['−'],r:['Numerator',-825]},{lab:'r = Numerator ÷ √(825 × 825)',k:'f',p:[['Numerator',-825],['Denominator',825]],r:['r',-1]},{lab:'R² = r² (%)',k:'n',r:['R² (%)',100,{pc:1}]},{lab:'The relationship is…',k:'q',o:['Perfect negative (inverse)','Weak positive','No relationship','Strong positive'],a:0}],
+mo:'Numerator = 4,800 − 5,625 = −825; each bracket = 6,450 − 5,625 = 825; r = −825 ÷ 825 = −1; R² = 1 = 100%. Scatter: linear, negative, strong, no outliers.',
+me:'كل ما درجة الإحصاء تزيد، درجة الرياضة تقل بنفس المعدل بالظبط، وx بيفسر 100% من تغيّر y. في الواقع ده نادر، والمثال للتدريب.'},
+
+{id:'4-9',lec:'L4',fam:'corr',t:'Ex.12: r from given sums',co:'Lecture 4 · Slides 28–29',
+m:'حساب r و R² لما المجاميع جاهزة، والحكم على النموذج.',
+ab:[['r','Pearson correlation','معامل الارتباط'],['R²','Coefficient of determination','نسبة التفسير']],
+hi:'R² ≥ 70%: نموذج كويس.',lo:'R² = 11%: نموذج وحش، 89% من التغيّر جاي من عوامل تانية لازم ندوّر عليها.',
+f:['r = (nΣxy − ΣxΣy) ÷ √{[nΣx² − (Σx)²][nΣy² − (Σy)²]}','R² = r²'],
+c:[['[AC] 10 [×] 315 [−] 50 [×] 59 [=]','200.0000','البسط'],['[AC] 10 [×] 310 [−] 50 [x²] [=]','600.0000','جزء x'],['[AC] 10 [×] 409 [−] 59 [x²] [=]','609.0000','جزء y'],['[AC] 200 [÷] [√] 600 [×] 609 [=]','0.3309','r'],['[x²] [=]','0.1095','R²']],
+h:'«تربيع الكسر بيصغّره»: 0.33 تبقى 0.11.',
+q:'Ex.12: n = 10, Σx = 50, Σy = 59, Σx² = 310, Σy² = 409, Σxy = 315. Find r and R² and interpret.',
+b:[{lab:'Numerator = nΣxy − ΣxΣy',k:'o',p:[['nΣxy',3150],['ΣxΣy',2950]],ops:['−'],r:['Numerator',200]},{lab:'r = 200 ÷ √(600 × 609)',k:'f',p:[['Numerator',200],['√(600 × 609)',604.48]],r:['r',0.331]},{lab:'R² (%)',k:'n',r:['R² (%)',10.95,{pc:1}]},{lab:'The model is…',k:'q',o:['Good (R² ≥ 70%)','Acceptable (50–70%)','Bad (R² < 50%)'],a:2}],
+mo:'Numerator = 3,150 − 2,950 = 200; r = 200 ÷ √(600 × 609) = 200 ÷ 604.48 = 0.331 (positive, weak); R² = 0.11 = 11% → bad model.',
+me:'العلاقة طردية ضعيفة، وx بيفسر 11% بس من تغيّر y، يعني الباحث لازم يدوّر على متغيرات تانية.'},
+
+{id:'4-10',lec:'L4',fam:'corr',t:'Spearman rank correlation',co:'Lecture 4 · Slide 8 (example added for practice)',
+m:'الارتباط بين ترتيبين (بيانات ترتيبية)، زي مديرين بيرتبوا نفس الموظفين.',
+ab:[['rₛ','Spearman correlation','ارتباط الرتب'],['d','Rank difference','الفرق بين رتبتي كل زوج'],['Σd²','','مجموع مربعات الفروق']],
+hi:'rₛ قريب من +1: الاتنين متفقين في الترتيب.',lo:'rₛ قريب من −1: ترتيب معكوس، وقريب من 0: مفيش اتفاق.',
+f:['rₛ = 1 − 6Σd² ÷ [n(n² − 1)]'],
+c:[['[AC] 6 [×] 4 [=]','24.0000','6Σd²'],['[AC] 5 [×] [(] 5 [x²] [−] 1 [)] [=]','120.0000','n(n² − 1)'],['[AC] 1 [−] 24 [÷] 120 [=]','0.8000','rₛ']],
+h:'«واحد ناقص ستة دي تربيع على n في n تربيع ناقص واحد».',
+q:'Two managers rank five employees. Manager 1: 1, 2, 3, 4, 5. Manager 2: 2, 1, 4, 3, 5. Find Spearman’s rank correlation.',
+b:[{lab:'6Σd²',k:'x',p:[['6',6],['Σd²',4]],r:['6Σd²',24]},{lab:'n(n² − 1)',k:'x',p:[['n',5],['n² − 1',24]],r:['n(n² − 1)',120]},{lab:'rₛ = 1 − 6Σd² ÷ n(n² − 1)',k:'o',p:[['1',1],['24 ÷ 120',0.2]],ops:['−'],r:['rₛ',0.8]}],
+mo:'d = −1, 1, −1, 1, 0 → Σd² = 4; rₛ = 1 − 24 ÷ 120 = 0.8 → strong positive agreement.',
+me:'المديرين متفقين بقوة في تقييم الموظفين. (المثال إضافة للمراجعة؛ الدكتور ذكر القانون من غير ما يحل مثال.)'},
+
+{id:'4-11',lec:'L4',fam:'disp',t:'Practice P1: full descriptive analysis',co:'Lecture 4 · Practice problem (exam style)',
+m:'مسألة شاملة زي مثال 9: كل مقاييس التموضع والتشتت مع بعض.',
+ab:[['x̄ / Q2 / Mode','','الوسط / الوسيط / المنوال'],['Q1, Q3, IQR','','الربيعات والمدى الربيعي'],['S², S, CV','','التباين والانحراف ومعامل الاختلاف'],['Bimodal','ثنائي المنوال','قيمتين مكررين نفس العدد']],
+hi:'الوسط 16 أكبر من الوسيط 15 بسبب القيمة 30.',lo:'فيه منوالين (15 و 16) لأن الاتنين متكررين مرتين.',
+f:['x̄ = Σx ÷ n','S² = (Σx² − n·x̄²) ÷ (n − 1)','CV = S ÷ x̄ × 100'],
+c:[['[AC] 12 [+] 15 [+] 11 [+] 18 [+] 14 [+] 15 [+] 30 [+] 13 [+] 16 [+] 16 [=]','160.0000','Σx'],['[AC] [(] 2816 [−] 10 [×] 16 [x²] [)] [÷] 9 [=]','28.4444','S²'],['[√] [Ans] [=]','5.3333','S'],['[÷] 16 [×] 100 [=]','33.3333','CV %']],
+h:'نفس ترتيب مثال 9: «وسط، وسيط، منوال، ربيعات، تباين، z، CV، شاذ».',
+q:'P1: Data: 12, 15, 11, 18, 14, 15, 30, 13, 16, 16. Find the mean, the variance (Σx² = 2,816), the coefficient of variation, and the mode.',
+b:[{lab:'Mean = Σx ÷ n',k:'f',p:[['Σx',160],['n',10]],r:['x̄',16]},{lab:'S² = (Σx² − n·x̄²) ÷ (n − 1)',k:'f',p:[['Σx² − n·x̄²',256],['n − 1',9]],r:['S²',28.44]},{lab:'CV = S ÷ x̄ × 100',k:'f',p:[['S',5.333],['x̄',16]],r:['CV (%)',33.33,{pc:1}]},{lab:'The mode is…',k:'q',o:['15','16','15 and 16 (bimodal)','No mode'],a:2}],
+mo:'x̄ = 16; median 15; modes 15 and 16; Q1 12.5; Q3 16; range 19; IQR 3.5; S² = 28.44; S = 5.33; z(18) = 0.375; CV = 33.3%; outlier 30 (upper fence 21.25).',
+me:'البيانات متمركزة حوالين 15–16 وتشتتها النسبي متوسط (33%)، والقيمة 30 شاذة.'},
+
+{id:'4-12',lec:'L4',fam:'corr',t:'Practice P2: r and R² from sums',co:'Lecture 4 · Practice problem',
+m:'تدريب تاني على حساب r و R² من المجاميع.',
+ab:[['r','Pearson correlation','معامل الارتباط'],['R²','Coefficient of determination','معامل التحديد']],
+hi:'r = 0.73: طردي قوي (0.7–0.9).',lo:'R² = 54%: نموذج مقبول، و46% جاي من عوامل تانية.',
+f:['r = (nΣxy − ΣxΣy) ÷ √{[nΣx² − (Σx)²][nΣy² − (Σy)²]}'],
+c:[['[AC] 8 [×] 290 [−] 40 [×] 52 [=]','240.0000','البسط'],['[AC] 240 [÷] [√] 320 [×] 336 [=]','0.7319','r'],['[x²] [=]','0.5357','R²']],
+h:'«بسط على جذر حاصل ضرب الجزئين».',
+q:'P2: n = 8, Σx = 40, Σy = 52, Σx² = 240, Σy² = 380, Σxy = 290. Find r and R² and interpret.',
+b:[{lab:'Numerator = nΣxy − ΣxΣy',k:'o',p:[['nΣxy',2320],['ΣxΣy',2080]],ops:['−'],r:['Numerator',240]},{lab:'r = 240 ÷ √(320 × 336)',k:'f',p:[['Numerator',240],['√(320 × 336)',327.9]],r:['r',0.732]},{lab:'R² (%)',k:'n',r:['R² (%)',53.57,{pc:1}]}],
+mo:'Numerator = 240; 8(240) − 40² = 320; 8(380) − 52² = 336; r = 240 ÷ 327.9 = 0.732 (positive, strong); R² = 53.6%.',
+me:'x بيفسر حوالي 54% من تغيّر y، والباقي من عوامل تانية.'},
+
+{id:'4-13',lec:'L4',fam:'disp',t:'Practice P3 & P4: pie angles and output',co:'Lecture 4 · Practice problems',
+m:'تدريب على زوايا الدائرة البيانية وقراءة مخرجات برنامج.',
+ab:[['Angle','الزاوية','(f ÷ total) × 360'],['Fence','حد القيم الشاذة','Q3 + 1.5 × IQR'],['CV','','S ÷ x̄ × 100']],
+hi:'Max أكبر من الحد الأعلى: قيمة شاذة.',lo:'CV = 20%: تشتت نسبي منخفض، البيانات مستقرة.',
+f:['Angle = (f ÷ total) × 360','Upper fence = Q3 + 1.5 × IQR'],
+c:[['[AC] 15 [÷] 40 [×] 360 [=]','135.0000','B'],['[AC] 57 [−] 44 [=]','13.0000','IQR'],['[AC] 57 [+] 1.5 [×] 13 [=]','76.5000','الحد الأعلى'],['[AC] 10 [÷] 50 [×] 100 [=]','20.0000','CV %']],
+h:'«الزاوية: التكرار على المجموع في 360».',
+q:'P3: Frequencies 5, 15, 12, 8 for A–D: find the angle of B. P4: Output: N = 20, Mean = 50, StDev = 10, Min = 30, Q1 = 44, Median = 49, Q3 = 57, Max = 95. Find the IQR, the upper fence and the CV.',
+b:[{lab:'Angle B = (f ÷ total) × 360',k:'x',p:[['f ÷ total',0.375],['360',360]],r:['Angle B (°)',135]},{lab:'IQR = Q3 − Q1',k:'o',p:[['Q3',57],['Q1',44]],ops:['−'],r:['IQR',13]},{lab:'Upper fence = Q3 + 1.5 × IQR',k:'o',p:[['Q3',57],['1.5 × IQR',19.5]],ops:['+'],r:['Upper fence',76.5]},{lab:'CV = S ÷ x̄ × 100',k:'f',p:[['S',10],['x̄',50]],r:['CV (%)',20,{pc:1}]}],
+mo:'P3: A 45°, B 135°, C 108°, D 72°. P4: range 65, IQR 13, S² 100, CV 20%, fences 24.5 and 76.5 → Max 95 is an outlier.',
+me:'التشتت منخفض (20%) لكن فيه قيمة شاذة (95) لازم نراجعها قبل أي تحليل.'},
+
+/* ===================== LECTURE 5 ===================== */
+{id:'5-1',lec:'L5',fam:'corr',t:'Regression concepts and assumptions',co:'Lecture 5 · Slides 1–13',
+m:'المفاهيم الأساسية للانحدار: النموذج، الافتراضات، والمراحل الأربعة.',
+ab:[['Y','Dependent variable','المتغير التابع (لازم كمي متصل)'],['X','Independent variable','المتغير المستقل'],['β₀, β₁','Parameters','معالم مجهولة في المجتمع بنقدّرها بـ b₀، b₁'],['ε','Error','حد الخطأ العشوائي'],['Multicollinearity','الارتباط الخطي المتعدد','علاقة قوية بين المتغيرات المستقلة']],
+hi:'الجزء المنضبط f(X) كبير والخطأ صغير: نموذج كويس.',lo:'لو الاختبارات متناقضة، شك في Multicollinearity (مثال الشقة: الغرف والمساحة).',
+f:['Y = β₀ + β₁X₁ + … + βₖXₖ + ε','Matrix form: Y = Xβ + ε','Phases: Identification → Estimation → Validation → Forecasting'],c:[],
+h:'المراحل: «توصيف، تقدير، تحقق، تنبؤ» = ت·ت·ت·ت.',
+q:'Choose the correct answer.',
+b:[{lab:'In ordinary regression, Y must be…',k:'q',o:['Nominal','Quantitative and continuous (interval or ratio)','Ordinal','Any type'],a:1},
+{lab:'A model uses both apartment area and number of rooms. Which assumption is violated?',k:'q',o:['Normal errors','No multicollinearity','Constant variance','Independent errors'],a:1},
+{lab:'The correct order of the four phases is…',k:'q',o:['Estimation, identification, forecasting, validation','Identification, estimation, validation, forecasting','Validation, estimation, identification, forecasting','Forecasting, validation, estimation, identification'],a:1},
+{lab:'A chocolate factory sets sugar, water and cocoa to control quality. This is…',k:'q',o:['Full control','Partial control','No control','Multicollinearity'],a:0},
+{lab:'The first step of simple regression (phase 1) is…',k:'q',o:['Check for a logical (causal) relationship, then draw the scatter plot','Compute F','Forecast Y','Drop outliers'],a:0}],
+mo:'Quantitative continuous · no multicollinearity · identification, estimation, validation, forecasting · full control · check the logical relation, then the scatter plot.',
+me:'الامتحان هيجيب الانحدار البسيط يدوي، والمتعدد كمخرجات جاهزة توزّعها على المراحل الأربعة.'},
+
+{id:'5-2',lec:'L5',fam:'corr',t:'Ex.11: the regression line by hand',co:'Lecture 5 · Ex.11 (equation computed for practice)',
+m:'تقدير معادلة خط الانحدار ŷ = b₀ + b₁x من المجاميع، واستخدامها في التنبؤ.',
+ab:[['b₁','Slope','الميل: y بتتغير قد إيه لما x تزيد وحدة'],['b₀','Intercept','الجزء المقطوع: ŷ لما x = صفر'],['ŷ','Predicted y','القيمة المتنبأ بيها'],['x̄, ȳ','Means','متوسطي x و y']],
+hi:'b₁ موجب: x لما تزيد y بتزيد.',lo:'b₁ سالب (هنا −1): x لما تزيد وحدة، y تقل وحدة.',
+f:['b₁ = (nΣxy − ΣxΣy) ÷ (nΣx² − (Σx)²)','b₀ = ȳ − b₁·x̄','ŷ = b₀ + b₁x'],
+c:[['[AC] [(] 10 [×] 480 [−] 75 [×] 75 [)] [÷] [(] 10 [×] 645 [−] 75 [x²] [)] [=]','−1.0000','b₁'],['[AC] 7.5 [−] [(−)] 1 [×] 7.5 [=]','15.0000','b₀'],['[AC] 15 [−] 8 [=]','7.0000','ŷ عند x = 8']],
+h:'b₁ هو «بسط r على جزء x بس».',
+q:'Ex.11: Σx = 75, Σy = 75, Σx² = 645, Σxy = 480, n = 10. Find the regression line of y on x and predict y for a student with x = 8.',
+b:[{lab:'b₁ = (nΣxy − ΣxΣy) ÷ (nΣx² − (Σx)²)',k:'f',p:[['nΣxy − ΣxΣy',-825],['nΣx² − (Σx)²',825]],r:['b₁',-1]},{lab:'b₀ = ȳ − b₁·x̄',k:'o',p:[['ȳ',7.5],['b₁·x̄',-7.5]],ops:['−'],r:['b₀',15]},{lab:'ŷ = b₀ + b₁x at x = 8',k:'o',p:[['b₀',15],['|b₁|·x',8]],ops:['−'],r:['ŷ',7]}],
+mo:'b₁ = −825 ÷ 825 = −1; x̄ = ȳ = 7.5; b₀ = 7.5 − (−1)(7.5) = 15; ŷ = 15 − x; at x = 8, ŷ = 7.',
+me:'كل درجة زيادة في الإحصاء بتقابلها درجة أقل في الرياضة، والطالب اللي جاب 8 متوقع ياخد 7.'},
+
+{id:'5-3',lec:'L5',fam:'corr',t:'SPSS coefficients: forecast and t-test',co:'Lecture 5 · Time vs Size output',
+m:'قراءة جدول Coefficients من SPSS، والتنبؤ، واختبار معنوية المعلمة بالـ Sig.',
+ab:[['B','Estimates','عمود التقديرات b₀ و b₁'],['Sig.','p-value','مستوى المعنوية المشاهد'],['α','Alpha','مستوى المعنوية النظري (عادة 0.05)'],['H₀ / H₁','Hypotheses','الفرض العدمي (β = 0) / البديل (β ≠ 0)']],
+hi:'Sig. أصغر من 0.05: المعلمة معنوية ونرفض H₀.',lo:'Sig. أكبر من 0.05: مش معنوية، ومنرفضش H₀.',
+f:['Ŷ = 3.131 − 0.011X','Rule: p-value < α → reject H₀'],
+c:[['[AC] 3.131 [−] 0.011 [×] 32 [=]','2.7790','التنبؤ عند 32 KB']],
+h:'«Sig. صغير = النتيجة حقيقية».',
+q:'SPSS output (Y = Time, X = Size in KB): Constant B = 3.131 (Sig. .000); Size B = −.011 (Sig. .001). (a) Forecast the time for a file of 32 KB. (b) Test β₁ at α = 0.05.',
+b:[{lab:'(a) Ŷ = b₀ + b₁X at X = 32',k:'o',p:[['b₀',3.131],['0.011 × 32',0.352]],ops:['−'],r:['Ŷ',2.779]},{lab:'(b) Since Sig. (0.001) < α (0.05), we…',k:'q',o:['Reject H₀: β₁ = 0 and accept H₁: β₁ ≠ 0','Do not reject H₀','Reject H₁','Cannot decide'],a:0},{lab:'If Sig. of b₁ were 0.08 at α = 0.05, b₁ would be…',k:'q',o:['Significant','Not significant'],a:1}],
+mo:'Ŷ = 3.131 − 0.011(32) = 2.779 time units. p-value 0.001 < 0.05 → reject H₀; size has a significant effect. If Sig. = 0.08 → not significant.',
+me:'كل كيلوبايت زيادة في الحجم بيقلل الوقت 0.011 وحدة، والتأثير ده حقيقي إحصائيًا.'},
+
+{id:'5-4',lec:'L5',fam:'corr',t:'R², adjusted R² and the F-test',co:'Lecture 5 · Model Summary & ANOVA',
+m:'جودة توفيق النموذج (R²) واختبار كل المعالم مع بعض (F).',
+ab:[['R²','Coefficient of determination','نسبة التفسير = SS regression ÷ SS total'],['Adj. R²','Adjusted R²','أدق، بيصحح لحجم العينة وعدد المتغيرات'],['F','F-test','اختبار كل المعالم مع بعض = MS regression ÷ MS residual'],['MS','Mean square','SS ÷ df']],
+hi:'R² ≥ 70% جيد، و50–70% مقبول.',lo:'R² < 50% ضعيف (حتى لو الباحث فرحان بـ 48%).',
+f:['R² = SS regression ÷ SS total','F = MS regression ÷ MS residual','Simple regression: F = t²'],
+c:[['[AC] 0.411 [÷] 0.619 [=]','0.6640','R²'],['[AC] 0.411 [÷] 0.019 [=]','21.6316','F (SPSS 21.76 من التقريب)'],['[AC] [(] [(−)] 4.665 [)] [x²] [=]','21.7622','t² = F']],
+h:'«t لكل معلمة لوحدها، F للكل مع بعض».',
+q:'ANOVA (Y = Time, X = Size): SS regression = .411 (df 1), SS residual = .208 (df 11), SS total = .619; MS residual = .019. (a) Find R². (b) Find F. (c) Judge R² = 0.532 from another model.',
+b:[{lab:'R² = SS regression ÷ SS total (%)',k:'f',p:[['SS regression',0.411],['SS total',0.619]],r:['R² (%)',66.4,{pc:1}]},{lab:'F = MS regression ÷ MS residual',k:'f',p:[['MS regression',0.411],['MS residual',0.019]],r:['F',21.63]},{lab:'(c) R² = 0.532 means the model is…',k:'q',o:['Good','Acceptable (moderate)','Weak'],a:1},{lab:'F Sig. = .001 at α = 0.05: the model as a whole is…',k:'q',o:['Significant','Not significant'],a:0}],
+mo:'R² = .411 ÷ .619 = 0.664 (66.4%). F = .411 ÷ .019 ≈ 21.6 (SPSS prints 21.76 from unrounded MS; also t² = (−4.665)² = 21.76). R² = 53.2% is acceptable. Sig. .001 < 0.05 → reject H₀, the model is significant.',
+me:'حجم الملف بيفسر حوالي 66% من الوقت، والنموذج ككل معنوي حتى عند ثقة 99%.'}
+];
+const CARDS=[['x̄','الوسط الحسابي','x̄ = Σx ÷ n','desc','بيتأثر بالقيم الشاذة'],['Median','الوسيط','rank n/2, n/2+1 (even) · (n+1)/2 (odd)','desc','رتّب الأول'],['Q1 / Q3','الربيعات','rank n/4 · rank 3n/4','disp',''],['IQR','المدى الربيعي','IQR = Q3 − Q1','disp','مش بيتأثر بالشاذ'],['s²','تباين العينة','s² = (Σx² − n·x̄²) ÷ (n − 1)','disp','على n − 1'],['S','الانحراف المعياري','S = √s²','disp',''],['CV','معامل الاختلاف','CV = S ÷ x̄ × 100','disp','الأقل أكثر استقرارًا'],['z','الدرجة المعيارية','z = (x − x̄) ÷ S','disp','بين −3 و +3 غالبًا'],['Fence','حد القيم الشاذة','Q3 + 1.5 × IQR · Q1 − 1.5 × IQR','disp',''],['SE','الخطأ المعياري','SE = σ ÷ √n','samp','يقل لما n تكبر'],['Angle','زاوية الدائرة','(f ÷ total) × 360','graph',''],['r','ارتباط بيرسون','(nΣxy − ΣxΣy) ÷ √{[nΣx² − (Σx)²][nΣy² − (Σy)²]}','corr','بين −1 و +1'],['R²','معامل التحديد','R² = r² = SSR ÷ SST','corr','≥ 70% جيد'],['rₛ','ارتباط سبيرمان','1 − 6Σd² ÷ [n(n² − 1)]','corr','للرتب'],['b₁','الميل','(nΣxy − ΣxΣy) ÷ (nΣx² − (Σx)²)','corr',''],['b₀','الجزء المقطوع','b₀ = ȳ − b₁·x̄','corr',''],['F','اختبار F','MS regression ÷ MS residual','corr','F = t² في البسيط'],['Decision','قاعدة القرار','p-value < α → reject H₀','corr','Sig. < 0.05'],['Y (neuron)','ناتج الخلية','Y = b + Σwᵢxᵢ','ai','bias بيتجمع'],['Phases','مراحل الانحدار','Identification → Estimation → Validation → Forecasting','corr','ت·ت·ت·ت']];
+
+const TC=[['Σx²','#1c7ed6'],['Σy²','#e8590c'],['Σxy','#7048e8'],['Σx','#1c7ed6'],['Σy','#e8590c'],['Σd²','#c2255c'],['Σwᵢxᵢ','#0c8599'],['Σwx','#0c8599'],['n·x̄²','#862e9c'],['x̄²','#862e9c'],['x̄','#2f9e44'],['ȳ','#f08c00'],['s²','#e03131'],['S²','#e03131'],['R²','#0b7285'],['rₛ','#c2255c'],['b₀','#d9480f'],['b₁','#5f3dc4'],['β₀','#d9480f'],['β₁','#5f3dc4'],['IQR','#0ca678'],['Q1','#1971c2'],['Q3','#1971c2'],['Q2','#1971c2'],['CV','#f59f00'],['SE','#099268'],['σ','#099268'],['H₀','#e03131'],['H₁','#2f9e44'],['Sig.','#c92a2a'],['α','#c92a2a'],['Range','#e8590c'],['Max','#495057'],['Min','#495057'],['MS','#7048e8'],['SS','#7048e8'],['Σ','#0c8599']];
+const TRX=new RegExp('(?<![A-Za-z])('+TC.map(t=>t[0].replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')(?![A-Za-z])','g'),TCM=Object.fromEntries(TC);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const col=s=>esc(s).replace(TRX,m=>`<span class="tm" style="color:${TCM[m]}">${m}</span>`);
+const ICON='<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="12" y="50" width="16" height="38" fill="#fff"/><rect x="42" y="28" width="16" height="60" fill="#fff"/><rect x="72" y="12" width="16" height="76" fill="#fff"/></svg>';
+const app=document.getElementById('app'),rail=document.getElementById('rail'),prog=document.getElementById('prog');
+let done=new Set();try{done=new Set(JSON.parse(localStorage.getItem('shw-done')||'[]'))}catch(e){}
+const save=()=>{try{localStorage.setItem('shw-done',JSON.stringify([...done]))}catch(e){}};
+const keys=s=>s.split(' ').filter(Boolean).map(t=>/^\[.*\]$/.test(t)?`<kbd>${esc(t.slice(1,-1))}</kbd>`:`<span class="num">${esc(t)}</span>`).join('');
+const fld=(i,j,p)=>`<div class="fld" data-b="${i}" data-j="${j}"><input type="text" inputmode="decimal" id="in-${i}-${j}" aria-label="${esc(p[0])}" autocomplete="off"><small>${col(p[0])}</small><span class="mk"></span></div>`;
+function boxHTML(b,i){
+  if(b.k==='q')return `<div class="box mcq" data-b="${i}"><p class="t">${col(b.lab)}</p>${b.o.map((o,j)=>`<label id="lb-${i}-${j}"><input type="radio" name="mc-${i}" value="${j}"><span>(${'abcdefgh'[j]}) ${col(o)}</span></label>`).join('')}</div>`;
+  if(b.k==='n')return `<div class="box" data-b="${i}"><p class="t">Required: ${col(b.lab)}</p><div class="eq">${fld(i,'r',b.r)}</div></div>`;
+  const parts=b.p.map((p,j)=>fld(i,j,p));let mid;
+  if(b.k==='f')mid=`<span class="frac">${parts[0]}<hr>${parts[1]}</span>`;
+  else if(b.k==='x')mid=parts.join('<span class="op">×</span>');
+  else mid=parts.map((x,j)=>j?`<span class="op">${b.ops[j-1]}</span>${x}`:x).join('');
+  return `<div class="box" data-b="${i}"><p class="t">Required: ${col(b.lab)}</p><div class="eq">${mid}<span class="op">=</span>${fld(i,'r',b.r)}</div></div>`;
+}
+function intro(){
+  return `<div class="intro"><h2>اتدرّب على مسائل التحليل الإحصائي بنفسك</h2><p class="sub">Statistical Analysis · Prof. Dr. Gamal Alshawadfi · Lectures 1–5</p>
+  <section><h3>المحاضرات</h3><div class="legend">${Object.entries(LECS).map(([k,v])=>`<div class="fam-mix" style="cursor:pointer" onclick="location.hash='p${P.find(p=>p.lec===k).id}'">${k}<small>${v} · ${P.filter(p=>p.lec===k).length} صفحات</small></div>`).join('')}</div></section>
+  <section><h3>إزاي تستخدم الصفحة</h3><ol>
+  <li>اختار المسألة من الشريط اللي فوق، وهي مرتبة بالمحاضرة.</li>
+  <li>اقرا <b>«قبل ما تحل»</b>: السؤال بيقيس إيه، والاختصارات بالبلدي، والنتيجة لو طلعت أعلى أو أقل يبقى معناها إيه.</li>
+  <li>افتكر المعادلة في دماغك الأول، وبعدين دوس <b>اكشف المعادلة</b>.</li>
+  <li>حل على ورقة بالآلة الحاسبة، ولو اتلخبطت افتح خطواتها.</li>
+  <li>اكتب البسط والمقام والناتج، أو اختار الإجابة، ودوس <b>Check my answer</b>: كل خانة هيظهر جنبها ✅ أو ❌.</li></ol></section>
+  <section><h3>قواعد الكتابة</h3><ol>
+  <li>الخانة اللي مكتوب جنبها <span class="f">(%)</span> اكتبها رقم عادي: 58.22 يعني 58.22%.</li>
+  <li>الأرقام السالبة اكتبها بعلامة ناقص: ‎-825.</li>
+  <li>قرّب لرقمين أو تلاتة عشريين، والصفحة بتقبل فرق التقريب البسيط.</li></ol></section>
+  <section><h3>كود الألوان</h3><p class="note">كل عيلة موضوعات ليها لون، وكل رمز ليه لون ثابت في كل الصفحات (Σx أزرق، Σy برتقالي، Σxy بنفسجي، x̄ أخضر، s² أحمر). اللون بيساعد المخ يربط الرمز بمعناه.</p><div class="legend">${Object.entries(FAMS).map(([k,f])=>`<div class="fam-${k}">${f[0]} · ${f[1]}<small>${f[2]}</small></div>`).join('')}</div></section>
+  <section><h3>الآلة الحاسبة في وضع الإحصاء <small>Casio fx-991ES PLUS</small></h3>
+  <p class="note">الدكتور سمح بالآلة الحاسبة. احسب بالقانون زي ما اتشرح، واستخدم وضع STAT علشان تتأكد من إجابتك.</p>
+  <ul class="steps"><li><span class="keys">${keys('[SHIFT] [MODE] Fix 4')}</span><span>4 أرقام عشرية زي الإجابات هنا.</span></li>
+  <li><span class="keys">${keys('[MODE] 3 1')}</span><span>وضع STAT ثم 1-VAR: دخّل القيم، وبعد كل قيمة دوس [=]، وبعدين [AC].</span></li>
+  <li><span class="keys">${keys('[SHIFT] 1 4 2 [=]')}</span><span>يطلّع x̄ (الوسط).</span></li>
+  <li><span class="keys">${keys('[SHIFT] 1 4 4 [=]')}</span><span>يطلّع sx (انحراف العينة على n − 1). متاخدش σx، ده على n.</span></li>
+  <li><span class="keys">${keys('[MODE] 3 2')}</span><span>وضع A+BX للارتباط والانحدار: دخّل عمود x، ثم انقل بالسهم لعمود y.</span></li>
+  <li><span class="keys">${keys('[SHIFT] 1 5 3 [=]')}</span><span>يطلّع r. واختيار 1 يطلّع A = b₀، و2 يطلّع B = b₁.</span></li></ul>
+  <p class="note">على fx-991EX: [MENU] 6 للإحصاء، وبعد إدخال البيانات [OPTN] يعرض كل النتايج مرة واحدة.</p></section>
+  <section><h3>تقنيات المذاكرة اللي في الصفحة</h3><ol><li><b>التذكّر النشط:</b> المعادلة مخفية لحد ما تحاول تفتكرها.</li><li><b>«خلّي في بالك»:</b> جملة قصيرة تربط القانون بصورة.</li><li><b>الترميز بالألوان</b> لكل رمز ولكل عيلة.</li><li><b>Flashcards بالتكرار المتباعد</b> للقوانين.</li><li><b>تغذية راجعة فورية</b> على كل خانة.</li></ol><button class="main" onclick="location.hash='cards'">افتح الـ Flashcards</button></section>
+  <p class="warn">المسائل متجمعة من سلايدات المحاضرات وسكريبتاتها، والأرقام مراجعة. فيه أمثلة إضافية للتدريب ومتعلّم عليها. قارن دايمًا بسلايدات الدكتور قبل الامتحان.</p>
+  <div class="nav"><span></span><button class="main" onclick="location.hash='p${P[0].id}'">ابدأ · ${P[0].id} →</button></div></div>`;
+}
+function view(p,ix){
+  const fm=p.fam,F=FAMS[fm];
+  const ab=p.ab.map(a=>`<dt>${esc(a[0])}</dt><dd>${a[1]?`<i>${esc(a[1])}</i> — `:''}${esc(a[2])}</dd>`).join('');
+  const calc=p.c.length?`<details><summary>اعرض خطوات الآلة الحاسبة (جرّب لوحدك الأول)</summary><ol class="steps">${p.c.map(s=>`<li><span class="keys">${keys(s[0])}</span><span class="lcd">${esc(s[1])}</span><span class="note">${esc(s[2])}</span></li>`).join('')}</ol></details>`:'<p class="note">المسألة دي فهم، مفيهاش حسابات.</p>';
+  return `<div class="band fam-${fm}">${ICON}<span class="tag">${p.lec} · ${F[0]}</span><h2 class="ltr">${p.id} · ${esc(p.t)}</h2><p class="sub">${esc(p.co)}</p></div>
+  <section><h3>قبل ما تحل</h3>
+   <div class="blk b-m"><span class="lbl">السؤال ده بيقيس إيه: </span>${esc(p.m)}</div>
+   <div class="blk b-a"><p class="row lbl">الاختصارات بالبلدي</p><dl class="ab">${ab}</dl></div>
+   <p class="row lbl">قراءة النتيجة</p><div class="hl"><div class="up"><b>⬆ لو أعلى</b>${esc(p.hi)}</div><div class="dn"><b>⬇ لو أقل</b>${esc(p.lo)}</div></div>
+   <div class="blk b-f" style="margin-top:12px"><p class="row lbl">المعادلة</p><p class="note" style="margin:0 0 6px">افتكرها في دماغك الأول، وبعدين اكشفها واتأكد.</p><ul class="forms hide" id="fl">${p.f.map(x=>`<li>${col(x)}</li>`).join('')}</ul><button class="reveal" id="rv">اكشف المعادلة</button></div>
+   <div class="blk b-h"><span class="lbl">خلّي في بالك: </span>${esc(p.h)}</div>
+   <div class="blk b-c"><p class="row lbl">على الآلة الحاسبة</p>${calc}</div></section>
+  <section><h3>Question</h3><div class="q ltr">${esc(p.q)}</div></section>
+  <section><h3>Your solution</h3>${p.b.map(boxHTML).join('')}
+   <div class="btns"><button class="main" id="chk">✔ Check my answer</button><button id="clr">امسح وابدأ تاني</button><button id="mdl">اعرض الحل النموذجي</button></div>
+   <div class="res" id="res" role="status"></div>
+   <div class="model" id="model"><div class="q ltr"><b>Model answer.</b> ${col(p.mo)}</div><p class="mean"><span class="lbl">معنى النتيجة: </span>${esc(p.me)}</p></div></section>
+  <div class="nav">${ix>0?`<button onclick="location.hash='p${P[ix-1].id}'">← ${P[ix-1].id}</button>`:`<button onclick="location.hash='start'">← Start</button>`}${ix<P.length-1?`<button class="main" onclick="location.hash='p${P[ix+1].id}'">${P[ix+1].id} →</button>`:`<button class="main" onclick="location.hash='cards'">Flashcards →</button>`}</div>`;
+}
+const num=s=>{s=String(s).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[−–]/g,'-').replace(/[,\s%$×°]/g,'').replace('٫','.');return s===''?NaN:Number(s)};
+const near=(x,v)=>Math.abs(x-v)<=Math.abs(v)*0.006+0.005;
+function judge(x,v,o){
+  if(isNaN(x))return['bad','اكتب رقم'];
+  if(near(x,v))return['ok','✅ صح'];
+  if(o&&o.pc&&near(x*100,v))return['bad','اكتبها نسبة: '+(x*100).toFixed(2)];
+  if(o&&o.pc&&near(x/100,v))return['bad','اكتبها نسبة: '+(x/100).toFixed(2)];
+  if(near(-x,v)&&v!==0)return['bad','❌ راجع الإشارة (+/−)'];
+  return['bad','❌ غلط'];
+}
+function bind(p){
+  const res=document.getElementById('res'),model=document.getElementById('model');
+  document.getElementById('chk').onclick=()=>{
+    let all=true,empty=true;
+    p.b.forEach((b,i)=>{
+      if(b.k==='q'){const sel=document.querySelector(`input[name=mc-${i}]:checked`);b.o.forEach((_,j)=>document.getElementById(`lb-${i}-${j}`).className='');
+        if(!sel){all=false;return}empty=false;const j=+sel.value;document.getElementById(`lb-${i}-${j}`).className=j===b.a?'ok':'bad';if(j!==b.a)all=false;return}
+      const items=(b.p||[]).map((q,j)=>[j,q]);items.push(['r',b.r]);
+      items.forEach(([j,q])=>{
+        const el=document.querySelector(`.fld[data-b="${i}"][data-j="${j}"]`),v=el.querySelector('input').value;
+        if(v.trim()!=='')empty=false;const [c,t]=judge(num(v),q[1],q[2]);el.className='fld '+c;el.querySelector('.mk').textContent=t;if(c!=='ok')all=false;});
+    });
+    if(empty){res.className='res bad';res.textContent='اكتب إجابتك الأول وبعدين دوس Check.';return}
+    if(all){res.className='res ok';res.innerHTML='✅ برافو! الإجابة صح.<p class="mean"><span class="lbl">معنى النتيجة: </span>'+esc(p.me)+'</p>';done.add(p.id);save();paintRail(p.id)}
+    else{res.className='res bad';res.textContent='❌ فيه خانات محتاجة مراجعة. ارجع لـ «قبل ما تحل» واتأكد من القانون والأقواس على الآلة الحاسبة، وبعدين جرّب تاني.'}
+  };
+  document.getElementById('clr').onclick=()=>{app.querySelectorAll('input[type=text]').forEach(x=>x.value='');app.querySelectorAll('input[type=radio]').forEach(x=>x.checked=false);app.querySelectorAll('.fld').forEach(f=>{f.className='fld';f.querySelector('.mk').textContent=''});app.querySelectorAll('.mcq label').forEach(l=>l.className='');res.className='res';model.classList.remove('show')};
+  const rv=document.getElementById('rv');rv.onclick=()=>{document.getElementById('fl').classList.remove('hide');rv.remove()};
+  document.getElementById('mdl').onclick=()=>model.classList.toggle('show');
+  app.querySelectorAll('input[type=text]').forEach(x=>x.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('chk').click()}));
+}
+function paintRail(cur){
+  let h=`<a href="#start" class="${cur==='start'?'on':''}">Start</a>`,last='';
+  P.forEach(p=>{if(p.lec!==last){h+=`<span class="lec">${p.lec}</span>`;last=p.lec}h+=`<a href="#p${p.id}" class="fam-${p.fam} ${p.id===cur?'on':''} ${done.has(p.id)?'done':''}">${p.id}</a>`});
+  rail.innerHTML=h+`<a href="#cards" class="${cur==='cards'?'on':''}" style="min-width:96px">Flashcards</a>`;
+  prog.textContent=`محلول صح: ${done.size} من ${P.length}`;
+  const on=rail.querySelector('.on');if(on&&on.scrollIntoView)on.scrollIntoView({inline:'center',block:'nearest'});
+}
+let LB={};try{LB=JSON.parse(localStorage.getItem('shw-lb')||'{}')}catch(e){}
+let ci=0;
+function cards(){
+  const box=k=>LB[k]||1,order=CARDS.map((c,i)=>i).sort((a,b)=>box(CARDS[a][0])-box(CARDS[b][0])||a-b);
+  const c=CARDS[order[ci%order.length]],cnt=[1,2,3].map(n=>CARDS.filter(x=>box(x[0])===n).length);
+  app.innerHTML=`<h2>Flashcards · كروت القوانين</h2><p class="note">شوف الاسم، قول القانون بصوت عالي، وبعدين اقلب الكارت. لو عرفته بيتنقل لصندوق أعلى ويظهرلك أقل، ولو غلطت بيرجع للصندوق 1 ويتكرر أكتر (التكرار المتباعد).</p>
+  <div class="boxes"><span>صندوق 1 (لسه): ${cnt[0]}</span><span>صندوق 2: ${cnt[1]}</span><span>صندوق 3 (ثابتة): ${cnt[2]}</span></div>
+  <div class="card fam-${c[3]}"><span>${FAMS[c[3]][0]}</span><div class="big">${esc(c[0])}</div><div>${esc(c[1])}</div><div class="back" id="bk" hidden>${col(c[2])}<div style="font:600 15px Cairo,sans-serif;direction:rtl;margin-top:6px">${esc(c[4])}</div></div></div>
+  <div class="btns"><button class="main" id="flip">اقلب الكارت</button><button id="yes" hidden>✅ عرفته</button><button id="no" hidden>❌ لسه</button></div>`;
+  const nx=k=>{LB[c[0]]=k;try{localStorage.setItem('shw-lb',JSON.stringify(LB))}catch(e){}ci++;cards()};
+  document.getElementById('flip').onclick=e=>{document.getElementById('bk').hidden=false;e.target.hidden=true;document.getElementById('yes').hidden=false;document.getElementById('no').hidden=false};
+  document.getElementById('yes').onclick=()=>nx(Math.min(3,box(c[0])+1));
+  document.getElementById('no').onclick=()=>nx(1);
+}
+function route(){
+  const h=location.hash.slice(1),ix=P.findIndex(p=>'p'+p.id===h);
+  if(h==='cards'){cards();paintRail('cards')}else if(ix<0){app.innerHTML=intro();paintRail('start')}else{app.innerHTML=view(P[ix],ix);bind(P[ix]);paintRail(P[ix].id)}
+  window.scrollTo(0,0);
+}
+addEventListener('hashchange',route);route();
+
+}
+</script>
+</body>
+</html>
