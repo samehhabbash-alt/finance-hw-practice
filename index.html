@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finance HW Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Archivo:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a calm, exact tutor; no noise, every step checkable.
+   IDEA: the Casio fx-991 itself — keys, LCD readout, a worked fraction on paper.
+   PICTURE: each problem's answer box is a real fraction/product you fill in, judged live.
+   COLOUR and TYPE: white paper, charcoal keys, LCD green-grey readout, one signal red accent; Cairo + Archivo.
+   LAYOUT: one problem per view, chip rail on top, Arabic explanation RTL, English question LTR, answer box last. */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121313);--ink:light-dark(#141414,#ececea);--mute:light-dark(#5d5d5a,#a3a39e);--line:light-dark(#dededa,#2c2d2c);--card:light-dark(#f5f5f2,#1b1c1b);--key:light-dark(#2b2d30,#3a3d41);--keyink:#f4f4f2;--lcd:light-dark(#c9d3bd,#2e3a2a);--lcdink:light-dark(#1d2618,#d7e6c9);--acc:#e4002b;--ok:light-dark(#137a3a,#4fd17f);--bad:light-dark(#c0001f,#ff6b7f)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 Cairo,"Segoe UI",Tahoma,sans-serif;overflow-x:clip}
+.ltr{direction:ltr;text-align:left;font-family:Archivo,Cairo,sans-serif}
+.f{direction:ltr;unicode-bidi:isolate;font-family:Archivo,sans-serif;font-weight:600;white-space:nowrap}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:3px solid var(--ink)}
+.top{display:flex;align-items:center;gap:12px;padding:10px max(4vw,14px) 4px;flex-wrap:wrap}
+.top h1{font:800 18px/1.2 Archivo,Cairo,sans-serif;margin:0;direction:ltr}
+.prog{margin-inline-start:auto;font-size:14px;color:var(--mute)}
+.rail{display:flex;gap:6px;overflow-x:auto;padding:8px max(4vw,14px) 10px;direction:ltr;scrollbar-width:thin}
+.rail a{flex:none;min-width:52px;height:38px;display:grid;place-items:center;border:1.5px solid var(--line);border-radius:8px;color:var(--ink);text-decoration:none;font:700 14px Archivo,sans-serif;background:var(--card)}
+.rail a.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.rail a.done{border-color:var(--ok);box-shadow:inset 0 -3px 0 var(--ok)}
+main{max-width:860px;margin:0 auto;padding:18px max(4vw,14px) 60px}
+h2{font:800 clamp(24px,4.5vw,34px)/1.1 Archivo,Cairo,sans-serif;margin:6px 0 4px;text-wrap:balance}
+.sub{color:var(--mute);margin:0 0 16px;direction:ltr;text-align:left;font-family:Archivo,sans-serif}
+section{border-top:1px solid var(--line);padding:16px 0}
+h3{font:800 19px/1.3 Cairo,sans-serif;margin:0 0 10px}
+h3 small{font-weight:600;color:var(--mute);font-size:14px}
+.row{margin:0 0 10px}
+.lbl{font-weight:800;color:var(--acc)}
+.ab{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;margin:6px 0 0;padding:0}
+.ab dt{font:700 15px Archivo,sans-serif;direction:ltr;background:var(--ink);color:var(--bg);padding:1px 8px;border-radius:4px;justify-self:start;align-self:start}
+.ab dd{margin:0}.ab dd i{font-style:normal;color:var(--mute);direction:ltr;unicode-bidi:isolate;font-family:Archivo,sans-serif;font-size:14px}
+.hl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.hl div{background:var(--card);border-radius:10px;padding:10px 12px;font-size:15px}
+.hl b{display:block}
+.forms{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.forms li{background:var(--card);border-inline-start:4px solid var(--ink);padding:6px 12px;border-radius:4px;direction:ltr;text-align:left;font:600 15px Archivo,sans-serif;overflow-x:auto}
+details{background:var(--card);border-radius:10px;padding:10px 14px}
+summary{cursor:pointer;font-weight:800;min-height:28px}
+.steps{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.steps li{display:flex;flex-wrap:wrap;align-items:center;gap:8px;border-bottom:1px dashed var(--line);padding-bottom:10px}
+.keys{direction:ltr;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+kbd{display:inline-grid;place-items:center;min-width:34px;height:30px;padding:0 7px;border-radius:6px;background:var(--key);color:var(--keyink);font:700 14px Archivo,sans-serif;box-shadow:0 2px 0 #000a}
+.num{font:700 16px Archivo,sans-serif;padding:0 2px}
+.lcd{direction:ltr;background:var(--lcd);color:var(--lcdink);font:700 17px "Courier New",monospace;padding:3px 10px;border-radius:5px;min-width:120px;text-align:right}
+.note{color:var(--mute);font-size:14px}
+.q{background:var(--card);border-radius:10px;padding:14px 16px;font-size:16.5px;line-height:1.6}
+.box{border:2px solid var(--ink);border-radius:12px;padding:14px;margin:0 0 14px}
+.box .t{direction:ltr;text-align:left;font:700 15px Archivo,sans-serif;margin:0 0 10px}
+.eq{direction:ltr;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.frac{display:inline-flex;flex-direction:column;align-items:center;gap:6px}
+.frac hr{width:100%;border:0;border-top:3px solid var(--ink);margin:0}
+.op{font:800 22px Archivo,sans-serif}
+.fld{display:flex;flex-direction:column;align-items:center;gap:2px}
+.fld small{font:600 12.5px Archivo,sans-serif;color:var(--mute)}
+input[type=text]{width:9.5em;height:44px;font:700 16px Archivo,sans-serif;text-align:center;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+input:focus,button:focus-visible,a:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.fld.ok input{border-color:var(--ok);border-width:2.5px}.fld.bad input{border-color:var(--bad);border-width:2.5px}
+.mk{font-size:13px;font-weight:700;min-height:18px;direction:rtl}
+.fld.ok .mk{color:var(--ok)}.fld.bad .mk{color:var(--bad)}
+.mcq label{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1.5px solid var(--line);border-radius:8px;margin:0 0 8px;direction:ltr;text-align:left;cursor:pointer;font-family:Archivo,sans-serif}
+.mcq label.ok{border-color:var(--ok)}.mcq label.bad{border-color:var(--bad)}
+.mcq input{width:20px;height:20px;margin-top:3px}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 0}
+button{min-height:46px;padding:0 18px;border-radius:10px;border:2px solid var(--ink);background:var(--bg);color:var(--ink);font:800 16px Cairo,sans-serif;cursor:pointer}
+button.main{background:var(--acc);border-color:var(--acc);color:#fff}
+.res{margin:12px 0 0;padding:12px 14px;border-radius:10px;font-weight:700;display:none}
+.res.ok{display:block;background:color-mix(in srgb,var(--ok) 14%,transparent);border:2px solid var(--ok)}
+.res.bad{display:block;background:color-mix(in srgb,var(--bad) 10%,transparent);border:2px solid var(--bad)}
+.mean{margin-top:8px;font-weight:600}
+.model{display:none;margin-top:12px}.model.show{display:block}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;direction:ltr}
+.intro ol{padding-inline-start:22px}.intro li{margin:0 0 6px}
+.warn{border-inline-start:4px solid var(--acc);padding:8px 12px;background:var(--card);border-radius:4px;font-size:15px}
+/* memory layer: one colour per ratio family, one colour per variable, everywhere */
+:root{--liq:#1c7ed6;--ast:#f08c00;--dbt:#e03131;--prf:#2f9e44;--mkt:#7048e8;--dup:#0c8599;--mix:#495057}
+.fam-liq{--fc:var(--liq)}.fam-ast{--fc:var(--ast)}.fam-dbt{--fc:var(--dbt)}.fam-prf{--fc:var(--prf)}.fam-mkt{--fc:var(--mkt)}.fam-dup{--fc:var(--dup)}.fam-mix{--fc:var(--mix)}
+.band{background:var(--fc);color:#fff;border-radius:14px;padding:16px 18px;margin:0 0 14px;position:relative;overflow:hidden}
+.band h2{color:#fff;margin:0}.band .sub{color:#ffffffd9;margin:2px 0 0}
+.band .tag{display:inline-block;background:#ffffff2e;border:1px solid #ffffff66;border-radius:999px;padding:1px 12px;font-size:14px;font-weight:700;margin-bottom:6px}
+.band svg{position:absolute;inset-inline-start:-18px;bottom:-26px;width:130px;opacity:.18}
+.rail a{border-top:4px solid var(--fc,var(--line))}
+.rail a.on{background:var(--fc,var(--ink));border-color:var(--fc,var(--ink));color:#fff}
+.blk{border-radius:12px;padding:12px 14px;margin:0 0 12px;border-inline-start:6px solid}
+.b-m{background:light-dark(#fff9db,#3a3418);border-color:#fab005}
+.b-a{background:light-dark(#e7f5ff,#16283a);border-color:#1c7ed6}
+.b-f{background:light-dark(#f3f0ff,#26203d);border-color:#7048e8}
+.b-c{background:light-dark(#f1f3f5,#222426);border-color:#343a40}
+.b-h{background:light-dark(#fff0f6,#3a1a29);border-color:#d6336c}
+.b-h .lbl{color:#d6336c}
+.hl .up{background:light-dark(#ebfbee,#16301d);border-inline-start:5px solid #2f9e44}.hl .up b{color:#2f9e44}
+.hl .dn{background:light-dark(#fff5f5,#3a1b1b);border-inline-start:5px solid #e03131}.hl .dn b{color:#e03131}
+.tm{font-weight:800}
+.forms.hide li{filter:blur(6px);user-select:none}
+.reveal{margin:8px 0 0;min-height:40px;font-size:15px}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:8px}
+.legend div{border-radius:10px;padding:10px 12px;color:#fff;background:var(--fc);font-weight:700}
+.legend small{display:block;font-weight:600;opacity:.9}
+.card{border-radius:16px;padding:22px;min-height:220px;color:#fff;background:var(--fc);display:flex;flex-direction:column;justify-content:center;gap:10px;text-align:center}
+.card .big{font:800 clamp(24px,5vw,34px)/1.15 Archivo,Cairo,sans-serif;direction:ltr}
+.card .back{background:#ffffffee;color:#141414;border-radius:10px;padding:12px;direction:ltr;font:700 18px Archivo,sans-serif}
+.boxes{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.boxes span{background:var(--card);border-radius:8px;padding:4px 12px;font-weight:700}
+.res.ok{background:light-dark(#d3f9d8,#173d20)}
+@media(max-width:600px){.hl{grid-template-columns:minmax(0,1fr)}input[type=text]{width:8em}.lcd{min-width:96px}}
+@media(prefers-reduced-motion:no-preference){.res{animation:pop .25s ease-out}@keyframes pop{from{transform:scale(.98);opacity:.4}}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><h1>Finance HW Practice · Ch. 4 · Problems 4-4 → 4-24</h1><span class="prog" id="prog"></span></div>
+  <nav class="rail" id="rail" aria-label="Problems"></nav>
+</header>
+<main id="app"></main>
+<script>
+{
+const P=[
+{id:'4-4',t:'Market/Book and EV/EBITDA',co:'Edelman Engines',
+m:'السوق بيقيّم الشركة بكام مقارنة بدفاترها، وقيمة الشركة كلها مقارنة بربحها التشغيلي.',
+ab:[['M/B','Market / Book','سعر السهم في البورصة ÷ قيمته في الدفاتر'],['BVPS','Book Value Per Share','حقوق الملكية ÷ عدد الأسهم'],['EV','Enterprise Value','قيمة الشركة كلها = قيمة الأسهم في السوق + الديون اللي عليها فايدة − الكاش'],['EBITDA','Earnings Before Interest, Taxes, Depreciation & Amortization','الربح التشغيلي قبل الفوايد والضرايب والإهلاك']],
+hi:'M/B أعلى من 1: السوق شايف الشركة أحسن من دفاترها (ثقة ونمو). EV/EBITDA عالي: المستثمرين دافعين كتير في كل جنيه ربح تشغيلي لأنهم متوقعين نمو.',
+lo:'M/B أقل من 1: السوق متشائم من الشركة. EV/EBITDA واطي: الشركة رخيصة أو السوق شايف فيها مخاطرة.',
+f:['BVPS = Book equity ÷ Shares','M/B = Price ÷ BVPS','EV = Price × Shares + Notes payable + Long-term debt − Cash','EV/EBITDA = EV ÷ EBITDA'],
+c:[['[AC] 5.1 [÷] 0.3 [=]','17.0000','BVPS (مليار ÷ مليار سهم = دولار للسهم)'],['20 [÷] [Ans] [=]','1.1765','M/B'],['[AC] 20 [×] 0.3 [+] 1 [+] 10.2 [−] 0.1 [=]','17.1000','EV بالمليار'],['[÷] 1.368 [=]','12.5000','EV/EBITDA']],
+q:'Edelman Engines has a stock price of $20 per share and 300 million shares outstanding. Its balance sheet shows common equity of $5.1 billion, notes payable of $1.0 billion, long-term debt of $10.2 billion, and cash of $0.1 billion. Its EBITDA is $1.368 billion. What are Edelman\'s market/book ratio and EV/EBITDA ratio?',
+b:[{lab:'M/B = Price ÷ BVPS',k:'f',p:[['Price per share',20,{s:1}],['BVPS',17,{s:1}]],r:['M/B (×)',1.1765]},
+{lab:'EV/EBITDA = EV ÷ EBITDA ($ billions)',k:'f',p:[['EV',17.1,{s:1}],['EBITDA',1.368,{s:1}]],r:['EV/EBITDA (×)',12.5]}],
+mo:'BVPS = 5.1 bn ÷ 300 m = $17 → M/B = 20 ÷ 17 = 1.18×. EV = 6.0 + 1.0 + 10.2 − 0.1 = $17.1 bn → EV/EBITDA = 17.1 ÷ 1.368 = 12.5×.',
+me:'السوق بيدفع 1.18 دولار في كل دولار دفتري، يعني تقييم أعلى من الدفاتر بشوية. وقيمة الشركة كلها 12.5 مرة ربحها التشغيلي، وده رقم عالي نسبيًا (Allied في الكتاب 5.2 والصناعة 9.2).'},
+
+{id:'4-5',t:'P/E ratio',co:'',
+m:'المستثمرين بيدفعوا كام في كل دولار ربح بتحققه الشركة.',
+ab:[['P/E','Price / Earnings','سعر السهم ÷ ربحية السهم'],['EPS','Earnings Per Share','صافي الربح ÷ عدد الأسهم'],['M/B','Market / Book','سعر السهم ÷ قيمته الدفترية'],['BVPS','Book Value Per Share','حقوق الملكية ÷ عدد الأسهم']],
+hi:'P/E عالي: السوق متوقع نمو قوي ومخاطر قليلة (زي شركات الاتصالات اللي الدكتور ضرب بيها مثل).',
+lo:'P/E واطي: نمو بطيء أو مخاطر عالية (Allied ‏9.8 مقابل الصناعة 11.3).',
+f:['Price = M/B × BVPS','P/E = Price ÷ EPS'],
+c:[['[AC] 2.7 [×] 21.84 [=]','58.9680','السعر'],['[÷] 2.4 [=]','24.5700','P/E']],
+q:'A company has an EPS of $2.40, a book value per share of $21.84, and a market/book ratio of 2.7×. What is its P/E ratio?',
+b:[{lab:'P/E = Price ÷ EPS',k:'f',p:[['Price',58.968],['EPS',2.4]],r:['P/E (×)',24.57]}],
+mo:'Price = 2.7 × 21.84 = $58.97; P/E = 58.97 ÷ 2.40 = 24.6×.',
+me:'المستثمر بيدفع 24.6 دولار في كل دولار ربح، يعني السوق متفائل جدًا بنمو الشركة (أعلى بكتير من Allied ‏9.8).'},
+
+{id:'4-6',t:'DuPont and ROE',co:'',
+m:'العائد على فلوس المساهمين، ومفكّك لـ 3 أسباب: الربحية، وكفاءة الأصول، والدين.',
+ab:[['ROE','Return on Equity','صافي الربح ÷ حقوق الملكية'],['PM','Profit Margin','هامش الربح من كل جنيه مبيعات'],['TAT','Total Assets Turnover','المبيعات ÷ الأصول (الأصول بتلف كام مرة في السنة)'],['EM','Equity Multiplier','الأصول ÷ حقوق الملكية (بيعكس استخدام الدين)']],
+hi:'ROE أعلى من الصناعة: المساهم بياخد عائد كويس. بس شوف جه منين؛ لو من EM عالي يبقى جاي من الدين ومعاه مخاطرة.',
+lo:'ROE أقل من الصناعة: دوّر على العامل الواطي فيهم (هامش؟ دوران؟) عشان الإدارة تعرف تشتغل على إيه.',
+f:['TAT = Sales ÷ Total assets','ROE = PM × TAT × EM'],
+c:[['[AC] 150 [÷] 60 [=]','2.5000','TAT'],['[AC] 0.03 [×] 2.5 [×] 1.9 [=]','0.1425','ROE = 14.25%']],
+q:'You are given the following data: profit margin = 3%; sales = $150 million; total assets = $60 million; equity multiplier = 1.9. What are the firm\'s total assets turnover and ROE?',
+b:[{lab:'TAT = Sales ÷ Total assets',k:'f',p:[['Sales',150,{s:1}],['Total assets',60,{s:1}]],r:['TAT (×)',2.5]},
+{lab:'ROE = PM × TAT × EM   (اكتب PM عشري: 3% = 0.03)',k:'x',p:[['PM',0.03,{d:1}],['TAT',2.5],['EM',1.9]],r:['ROE (%)',14.25,{pc:1}]}],
+mo:'TAT = 150 ÷ 60 = 2.5×; ROE = 3% × 2.5 × 1.9 = 14.25%.',
+me:'كل 100 جنيه حقوق ملكية جابت 14.25 جنيه ربح. الهامش 3% صغير، بس الأصول بتلف مرتين ونص والدين بيكبّر العائد.'},
+
+{id:'4-7',t:'ROE and ROIC',co:'Baker Industries',
+m:'عائد المساهمين (ROE)، وعائد كل رأس المال المستثمر في الشركة من دين وملكية (ROIC).',
+ab:[['ROIC','Return on Invested Capital','الربح التشغيلي بعد الضريبة ÷ (الديون اللي عليها فايدة + حقوق الملكية)'],['EBIT','Earnings Before Interest & Taxes','الربح قبل الفوايد والضرايب'],['EBT','Earnings Before Taxes','الربح قبل الضريبة'],['T','Tax rate','نسبة الضريبة']],
+hi:'ROIC أعلى من تكلفة التمويل: الشركة بتخلق قيمة. وROE بيطلع أعلى من ROIC لما الدين بيتستخدم بشكل مربح.',
+lo:'ROIC أقل من تكلفة التمويل: الشركة بتهدر الفلوس اللي المستثمرين والبنوك حاطينها.',
+f:['EBT = NI ÷ (1 − T)','EBIT = EBT + Interest','ROIC = EBIT × (1 − T) ÷ (Notes payable + LTD + Equity)'],
+c:[['[AC] 24000 [÷] 250000 [=]','0.0960','ROE = 9.6%'],['[AC] 24000 [÷] [(] 1 [−] 0.4 [)] [=]','40000.0000','EBT'],['[+] 5000 [=]','45000.0000','EBIT'],['[×] 0.6 [=]','27000.0000','البسط EBIT(1−T)'],['[÷] [(] 27000 [+] 75000 [+] 250000 [)] [=]','0.0767','ROIC = 7.67%']],
+q:'Baker Industries\' net income is $24,000, its interest expense is $5,000, and its tax rate is 40%. Its notes payable equal $27,000, long-term debt equals $75,000, and common equity equals $250,000. The firm finances with only debt and common equity. What are the firm\'s ROE and ROIC?',
+b:[{lab:'ROE = Net income ÷ Equity',k:'f',p:[['Net income',24000],['Equity',250000]],r:['ROE (%)',9.6,{pc:1}]},
+{lab:'ROIC = EBIT(1 − T) ÷ Invested capital',k:'f',p:[['EBIT(1−T)',27000],['Invested capital',352000]],r:['ROIC (%)',7.67,{pc:1}]}],
+mo:'ROE = 24,000 ÷ 250,000 = 9.6%. EBT = 24,000 ÷ 0.6 = 40,000; EBIT = 45,000; ROIC = 45,000 × 0.6 ÷ 352,000 = 7.67%.',
+me:'المساهمين بياخدوا 9.6%، وكل رأس المال (دين + ملكية) بيكسب 7.67% بعد الضريبة. الفرق جاي من إن الدين أرخص من العائد اللي الأصول بتجيبه.'},
+
+{id:'4-8',t:'DuPont and net income',co:'Precious Metal Mining',
+m:'إزاي نمشي في DuPont بالعكس ونطلّع صافي الربح من النسب.',
+ab:[['ROA','Return on Assets','صافي الربح ÷ الأصول'],['ROE','Return on Equity','صافي الربح ÷ حقوق الملكية'],['TAT','Total Assets Turnover','المبيعات ÷ الأصول'],['EM','Equity Multiplier','الأصول ÷ حقوق الملكية؛ لو الملكية 50% يبقى EM = 2']],
+hi:'ROA أعلى من الصناعة: الأصول بتولّد ربح كويس.',lo:'ROA أقل: أصول كتير مش بتشتغل كفاية، أو هامش ضعيف.',
+f:['Total assets = Sales ÷ TAT','EM = 1 ÷ 0.5 = 2','ROA = ROE ÷ EM','Net income = ROA × Total assets'],
+c:[['[AC] 17000000 [÷] 3.2 [=]','5312500.0000','الأصول'],['[×] 0.17 [÷] 2 [=]','451562.5000','صافي الربح']],
+q:'Precious Metal Mining has $17 million in sales, its ROE is 17%, and its total assets turnover is 3.2×. Common equity on the firm\'s balance sheet is 50% of its total assets. What is its net income?',
+b:[{lab:'Net income = ROA × Total assets   (اكتب ROA عشري)',k:'x',p:[['ROA',0.085,{d:1}],['Total assets',5312500]],r:['Net income ($)',451562.5]}],
+mo:'Total assets = 17 m ÷ 3.2 = $5,312,500; EM = 2; ROA = 17% ÷ 2 = 8.5%; Net income = 8.5% × 5,312,500 = $451,563.',
+me:'كل 100 جنيه أصول جابت 8.5 جنيه ربح، والدين ضاعفها لـ 17% للمساهمين. صافي الربح حوالي 451.6 ألف دولار.'},
+
+{id:'4-9',t:'BEP, ROE and ROIC',co:'Broward Manufacturing',
+m:'قوة الأصول نفسها في توليد ربح تشغيلي (BEP)، وعائد المساهمين، وعائد رأس المال المستثمر.',
+ab:[['BEP','Basic Earning Power','EBIT ÷ إجمالي الأصول: ربح الأصول قبل التمويل والضريبة'],['Invested capital','رأس المال المستثمر','الأصول − الالتزامات اللي ملهاش فايدة (الموردين والمستحقات)'],['ROE / ROIC','','زي 4-7']],
+hi:'BEP أعلى من سعر الفايدة: الاقتراض بيزوّد عائد المساهمين. وROE هنا أعلى من ROIC لأن فيه دين.',lo:'BEP أقل من سعر الفايدة: الدين بيضر المساهمين.',
+f:['Total assets = NI ÷ ROA','EBT = NI ÷ (1 − T)','EBIT = EBT + Interest','BEP = EBIT ÷ Total assets','Invested capital = Total assets − Payables & accruals','Equity = 60% × Invested capital','ROE = NI ÷ Equity','ROIC = EBIT(1 − T) ÷ Invested capital'],
+c:[['[AC] 615000 [÷] 0.1 [=]','6150000.0000','الأصول'],['[AC] 615000 [÷] [(] 1 [−] 0.3 [)] [=]','878571.4286','EBT'],['[+] 202950 [=]','1081521.4286','EBIT (اكتبه على ورقة)'],['[÷] 6150000 [=]','0.1759','BEP'],['[AC] 6150000 [−] 950000 [=]','5200000.0000','Invested capital'],['[×] 0.6 [=]','3120000.0000','Equity'],['[AC] 615000 [÷] 3120000 [=]','0.1971','ROE'],['[AC] 1081521.4286 [×] 0.7 [÷] 5200000 [=]','0.1456','ROIC']],
+q:'Broward Manufacturing recently reported net income of $615,000 and interest expense of $202,950; its tax rate is 30% and its ROA is 10%. Its accounts payable and accruals (which carry no interest) total $950,000. The firm finances its invested capital with 40% debt and 60% common equity. What are its basic earning power (BEP), ROE and ROIC?',
+b:[{lab:'BEP = EBIT ÷ Total assets',k:'f',p:[['EBIT',1081521.43],['Total assets',6150000]],r:['BEP (%)',17.59,{pc:1}]},
+{lab:'ROE = Net income ÷ Equity',k:'f',p:[['Net income',615000],['Equity',3120000]],r:['ROE (%)',19.71,{pc:1}]},
+{lab:'ROIC = EBIT(1 − T) ÷ Invested capital',k:'f',p:[['EBIT(1−T)',757065],['Invested capital',5200000]],r:['ROIC (%)',14.56,{pc:1}]}],
+mo:'Total assets = 6,150,000; EBT = 878,571; EBIT = 1,081,521; BEP = 17.59%. Invested capital = 5,200,000; Equity = 3,120,000; ROE = 19.71%; ROIC = 14.56%.',
+me:'الأصول بتجيب 17.6% قبل التمويل، والمساهمين بياخدوا 19.7% لأن جزء من التمويل دين أرخص. الشركة بتخلق قيمة طالما ROIC ‏14.6% أعلى من تكلفة تمويلها.'},
+
+{id:'4-10',t:'M/B, share price and EV/EBITDA',co:'',
+m:'إزاي نطلّع سعر السهم من نسبة M/B، وقيمة المنشأة مقارنة بربحها التشغيلي.',
+ab:[['Market value of equity','قيمة الأسهم في السوق','M/B × حقوق الملكية الدفترية'],['EV','Enterprise Value','قيمة الأسهم + الدين − الكاش'],['EBITDA','','الربح قبل الفوايد والضرايب والإهلاك']],
+hi:'EV/EBITDA عالي: المستثمرين متفائلين بالنمو.',lo:'EV/EBITDA واطي: الشركة رخيصة أو فيها مخاطر. ملحوظة: الـ P/E = 9 معطاة زيادة ومش محتاجينها.',
+f:['Market equity = M/B × Book equity','Price = Market equity ÷ Shares','EV = Market equity + Debt − Cash','EV/EBITDA = EV ÷ EBITDA'],
+c:[['[AC] 2 [×] 6.5 [=]','13.0000','قيمة الأسهم بالمليار'],['[÷] 0.18 [=]','72.2222','السعر (0.18 مليار سهم)'],['[AC] 13 [+] 7 [−] 0.25 [=]','19.7500','EV'],['[÷] 2 [=]','9.8750','EV/EBITDA']],
+q:'A company has a market/book ratio of 2.0×, common equity of $6.5 billion on its balance sheet, and 180 million shares outstanding. Its P/E ratio is 9.0×. It has total debt of $7 billion, cash of $0.25 billion, and EBITDA of $2 billion. What is its stock price, and what is its EV/EBITDA ratio?',
+b:[{lab:'Price = Market value of equity ÷ Shares',k:'f',p:[['Market equity',13,{s:1}],['Shares',0.18,{s:1}]],r:['Price ($)',72.22]},
+{lab:'EV/EBITDA = EV ÷ EBITDA ($ billions)',k:'f',p:[['EV',19.75,{s:1}],['EBITDA',2,{s:1}]],r:['EV/EBITDA (×)',9.875]}],
+mo:'Market equity = 2.0 × 6.5 = $13 bn; Price = 13 bn ÷ 180 m = $72.22. EV = 13 + 7 − 0.25 = $19.75 bn; EV/EBITDA = 9.88×.',
+me:'السهم بـ 72.22 دولار، وقيمة الشركة كلها حوالي 10 مرات ربحها التشغيلي، قريب من متوسط صناعة Allied في الكتاب (9.2).'},
+
+{id:'4-11',t:'Profit margin and debt-to-capital',co:'Caulder Corp.',
+m:'إزاي نطلّع هامش الربح ونسبة الدين من ROA و ROE و TAT.',
+ab:[['PM','Profit Margin','هامش الربح'],['ROA','Return on Assets','صافي الربح ÷ الأصول'],['EM','Equity Multiplier','الأصول ÷ حقوق الملكية'],['Debt to capital','','الدين ÷ (الدين + حقوق الملكية)']],
+hi:'PM عالي: الشركة متحكمة في تكاليفها أو بتبيع بسعر أعلى. EM عالي: دين أكتر ومخاطرة أكبر.',lo:'PM واطي: تكاليف عالية أو أسعار ضعيفة. EM قريب من 1: الشركة شبه مفيهاش دين.',
+f:['ROA = PM × TAT  ⇒  PM = ROA ÷ TAT','ROE = ROA × EM  ⇒  EM = ROE ÷ ROA','Debt to capital = 1 − 1 ÷ EM'],
+c:[['[AC] 0.04 [÷] 1.3 [=]','0.0308','PM = 3.08%'],['[AC] 0.08 [÷] 0.04 [=]','2.0000','EM'],['[AC] 1 [−] 1 [÷] 2 [=]','0.5000','الآلة بتعمل القسمة الأول ← 50%']],
+q:'Caulder Corp. has an ROA of 4%, a total assets turnover of 1.3×, and an ROE of 8%. The firm finances its assets with only debt and common equity. What is its profit margin, and what is its debt-to-capital ratio?',
+b:[{lab:'PM = ROA ÷ TAT   (اكتب ROA عشري)',k:'f',p:[['ROA',0.04,{d:1}],['TAT',1.3]],r:['PM (%)',3.08,{pc:1}]},
+{lab:'EM = ROE ÷ ROA   (عشري)',k:'f',p:[['ROE',0.08,{d:1}],['ROA',0.04,{d:1}]],r:['EM (×)',2]},
+{lab:'Debt to capital = 1 − 1 ÷ EM',k:'o',p:[['1',1],['1 ÷ EM',0.5]],ops:['−'],r:['Debt to capital (%)',50,{pc:1}]}],
+mo:'PM = 4% ÷ 1.3 = 3.08%. EM = 8% ÷ 4% = 2 → equity = 50% of assets → debt to capital = 50%.',
+me:'الشركة بتكسب 3 قروش من كل جنيه مبيعات، ونص تمويلها دين، والدين ده هو اللي ضاعف عائد المساهمين من 4% لـ 8%.'},
+
+{id:'4-12',t:'Times interest earned',co:'Thomson Trucking',
+m:'الأرباح التشغيلية بتغطي الفايدة كام مرة؟ ده مقياس أمان الدائنين.',
+ab:[['TIE','Times Interest Earned','EBIT ÷ الفوايد'],['EBIT','','الربح قبل الفوايد والضرايب'],['EBT','','الربح قبل الضريبة = صافي الربح ÷ (1 − الضريبة)']],
+hi:'TIE أعلى من الصناعة: الشركة مرتاحة في سداد فوايدها، والبنوك تقرضها بسهولة.',lo:'TIE أقل: خطر إنها متقدرش تسدد، والاقتراض يبقى أصعب وأغلى.',
+f:['EBIT = 10% × Sales','NI = 5% × Sales','EBT = NI ÷ (1 − T)','Interest = EBIT − EBT','TIE = EBIT ÷ Interest'],
+c:[['[AC] 0.1 [×] 16 [=]','1.6000','EBIT'],['[AC] 0.05 [×] 16 [÷] [(] 1 [−] 0.4 [)] [=]','1.3333','EBT'],['1.6 [−] [Ans] [=]','0.2667','الفايدة'],['1.6 [÷] [Ans] [=]','6.0000','TIE']],
+q:'Thomson Trucking has $16 billion in sales, its EBIT is 10% of sales, its net income is 5% of sales, and its tax rate is 40%. What is its times-interest-earned (TIE) ratio?',
+b:[{lab:'TIE = EBIT ÷ Interest ($ billions)',k:'f',p:[['EBIT',1.6,{s:1}],['Interest',0.26667,{s:1}]],r:['TIE (×)',6]}],
+mo:'EBIT = 1.6 bn; NI = 0.8 bn; EBT = 0.8 ÷ 0.6 = 1.333 bn; Interest = 0.267 bn; TIE = 1.6 ÷ 0.267 = 6.0×.',
+me:'الأرباح التشغيلية بتغطي الفايدة 6 مرات، زي متوسط صناعة Allied بالظبط (6.0)، يعني وضع مريح للدائنين.'},
+
+{id:'4-13',t:'TIE and ROIC',co:'W.C. Pruett Corp.',
+m:'تغطية الفوايد (TIE) وعائد رأس المال المستثمر (ROIC) في مسألة واحدة.',
+ab:[['TIE','Times Interest Earned','EBIT ÷ الفوايد'],['ROIC','Return on Invested Capital','EBIT(1−T) ÷ رأس المال المستثمر'],['Interest','','سعر الفايدة × الدين']],
+hi:'TIE عالي = أمان للدائنين. ROIC أعلى من تكلفة التمويل = الشركة بتخلق قيمة.',lo:'TIE قريب من 1 = خطر. ROIC أقل من تكلفة التمويل = الشركة بتخسر قيمة.',
+f:['Interest = 7% × Debt','NI = 7% × Sales','EBT = NI ÷ (1 − T)','EBIT = EBT + Interest','TIE = EBIT ÷ Interest','ROIC = EBIT(1 − T) ÷ Invested capital'],
+c:[['[AC] 0.07 [×] 2700000 [÷] [(] 1 [−] 0.35 [)] [=]','290769.2308','EBT'],['[+] [(] 0.07 [×] 600000 [)] [=]','332769.2308','EBIT (اكتبه على ورقة)'],['[÷] 42000 [=]','7.9231','TIE'],['[AC] 332769.2308 [×] 0.65 [÷] 1200000 [=]','0.1803','ROIC']],
+q:'W.C. Pruett Corp. has $600,000 of interest-bearing debt outstanding at an interest rate of 7%. Its annual sales are $2.7 million, its net profit margin is 7%, and its tax rate is 35%. Its total invested capital (debt plus equity) is $1.2 million. What are its TIE ratio and its ROIC?',
+b:[{lab:'TIE = EBIT ÷ Interest',k:'f',p:[['EBIT',332769.23],['Interest',42000]],r:['TIE (×)',7.923]},
+{lab:'ROIC = EBIT(1 − T) ÷ Invested capital',k:'f',p:[['EBIT(1−T)',216300],['Invested capital',1200000]],r:['ROIC (%)',18.03,{pc:1}]}],
+mo:'Interest = 42,000; NI = 189,000; EBT = 290,769; EBIT = 332,769; TIE = 7.92×; ROIC = 332,769 × 0.65 ÷ 1,200,000 = 18.03%.',
+me:'الأرباح بتغطي الفايدة حوالي 8 مرات، وكل جنيه مستثمر بيرجّع 18 قرش بعد الضريبة. ده أداء قوي.'},
+
+{id:'4-14',t:'Return on equity',co:'Pacific Packaging',
+m:'هيحصل إيه في عائد المساهمين لو الشركة نفّذت خطة تشغيل وتمويل جديدة.',
+ab:[['ROE','Return on Equity','صافي الربح ÷ حقوق الملكية'],['Debt ratio','','الدين ÷ الأصول؛ 40% دين يعني الملكية 60% من الأصول'],['TAT','Total Assets Turnover','المبيعات ÷ الأصول ⇐ الأصول = المبيعات ÷ TAT']],
+hi:'ROE الجديد أعلى من 5% (القديم): الخطة بتفيد المساهمين.',lo:'ROE الجديد أقل من 5%: الخطة مش مجدية.',
+f:['NI = (EBIT − Interest) × (1 − T)','Total assets = Sales ÷ TAT','Equity = 60% × Total assets','ROE = NI ÷ Equity'],
+c:[['[AC] [(] 1258000 [−] 561000 [)] [×] 0.65 [=]','453050.0000','صافي الربح'],['[AC] 17000000 [÷] 2.1 [×] 0.6 [=]','4857142.8571','حقوق الملكية'],['453050 [÷] [Ans] [=]','0.0933','ROE = 9.33%']],
+q:'Pacific Packaging\'s ROE last year was only 5%, but its management has developed a new operating plan. The new plan calls for a total debt ratio of 40%, which will result in interest charges of $561,000 per year. Management projects an EBIT of $1,258,000 on sales of $17,000,000, and it expects a total assets turnover ratio of 2.1×. The tax rate will be 35%. If the changes are made, what will be the company\'s return on equity?',
+b:[{lab:'Total assets = Sales ÷ TAT',k:'f',p:[['Sales',17000000],['TAT',2.1]],r:['Total assets ($)',8095238]},
+{lab:'ROE = Net income ÷ Equity',k:'f',p:[['Net income',453050],['Equity',4857143]],r:['ROE (%)',9.33,{pc:1}]}],
+mo:'Total assets = 17,000,000 ÷ 2.1 = 8,095,238; Equity = 60% = 4,857,143; NI = (1,258,000 − 561,000) × 0.65 = 453,050; ROE = 9.33% (up from 5%).',
+me:'الخطة هتقرّب عائد المساهمين للضعف (من 5% لـ 9.33%)، يعني تستاهل التنفيذ.'},
+
+{id:'4-15',t:'ROE and quick ratio',co:'Lloyd Inc.',
+m:'أثر تقليل المخزون الزيادة على السيولة وعلى عائد المساهمين.',
+ab:[['Current ratio','نسبة التداول','الأصول المتداولة ÷ الخصوم المتداولة'],['Quick ratio','النسبة السريعة','(الأصول المتداولة − المخزون) ÷ الخصوم المتداولة: السيولة من غير المخزون'],['Buy back','إعادة شراء الأسهم','الشركة تشتري أسهمها، فحقوق الملكية تقل بنفس المبلغ']],
+hi:'ROE الجديد أعلى من القديم: تقليل الأصول العاطلة رفع عائد المساهمين. Quick أعلى من 1: الشركة تقدر تسدد ديونها القصيرة من غير ما تبيع مخزون.',lo:'Quick أقل من 1: الشركة محتاجة تبيع مخزون علشان تسدد.',
+f:['Target CA = 2.5 × CL','Inventory cut = Old CA − Target CA','New equity = Old equity − Inventory cut','New ROE = NI ÷ New equity','Quick = (CA − Inventory) ÷ CL'],
+c:[['[AC] 2.5 [×] 50000 [=]','125000.0000','الأصول المتداولة المستهدفة'],['[AC] 210000 [−] 125000 [=]','85000.0000','قيمة المخزون اللي هيتباع'],['[AC] 15000 [÷] [(] 200000 [−] 85000 [)] [=]','0.1304','ROE الجديد'],['[−] 15000 [÷] 200000 [=]','0.0554','التغير (الآلة بتقسم الأول ثم تطرح)'],['[AC] [(] 125000 [−] 65000 [)] [÷] 50000 [=]','1.2000','Quick (المخزون الجديد 150,000 − 85,000 = 65,000)']],
+q:'Lloyd Inc. has current assets of $210,000 (of which inventories are $150,000), current liabilities of $50,000, common equity of $200,000, and net income of $15,000. Management believes inventories are excessive and can be reduced until the current ratio equals the industry average of 2.5×, without affecting sales or net income. If the inventory is sold and not replaced, and the funds are used to buy back common stock at book value, by how much will the ROE change? What will the firm\'s new quick ratio be?',
+b:[{lab:'Target current assets = 2.5 × CL',k:'x',p:[['Current ratio',2.5],['CL',50000]],r:['Target CA ($)',125000]},
+{lab:'New ROE = Net income ÷ New equity',k:'f',p:[['Net income',15000],['New equity',115000]],r:['New ROE (%)',13.04,{pc:1}]},
+{lab:'ROE change = New ROE − Old ROE (%)',k:'o',p:[['New ROE %',13.04],['Old ROE %',7.5]],ops:['−'],r:['Change (points)',5.54]},
+{lab:'Quick ratio = (CA − Inventory) ÷ CL',k:'f',p:[['CA − Inventory',60000],['CL',50000]],r:['Quick (×)',1.2]}],
+mo:'Old ROE = 15,000 ÷ 200,000 = 7.5%. Target CA = 125,000 → inventory falls 85,000 → equity = 115,000 → new ROE = 13.04% (+5.54 points). New inventory = 65,000 → quick = (125,000 − 65,000) ÷ 50,000 = 1.2×.',
+me:'المخزون الزيادة كان فلوس نايمة. لما اتباع واتردّت للمساهمين، نفس الربح اتقسم على ملكية أقل فالعائد طلع من 7.5% لـ 13%، والسيولة السريعة متغيرتش (1.2).'},
+
+{id:'4-16',t:'ROE with and without debt',co:'Commonwealth Construction',
+m:'الدين بيعمل إيه في عائد المساهمين لما الأرباح التشغيلية ثابتة (Financial leverage).',
+ab:[['BEP','Basic Earning Power','EBIT ÷ الأصول ⇐ EBIT = BEP × الأصول'],['ROE','Return on Equity','صافي الربح ÷ حقوق الملكية'],['Financial leverage','الرافعة المالية','استخدام الدين لتكبير عائد المساهمين']],
+hi:'ROE بالدين أعلى من غير دين: لأن BEP ‏(35%) أكبر من سعر الفايدة (8%)، فالفرق بيروح للمساهمين.',lo:'لو BEP أقل من سعر الفايدة، نفس الدين هيخفض ROE ويخسّر المساهمين.',
+f:['EBIT = BEP × Assets','NI = (EBIT − Interest) × (1 − T)','ROE = NI ÷ Equity'],
+c:[['[AC] 0.35 [×] 3000000 [=]','1050000.0000','EBIT'],['[×] 0.6 [÷] 3000000 [=]','0.2100','ROE من غير دين'],['[AC] [(] 1050000 [−] 72000 [)] [×] 0.6 [=]','586800.0000','صافي الربح بالدين (الفايدة 0.08 × 900,000)'],['[÷] [(] 0.7 [×] 3000000 [)] [=]','0.2794','ROE بالدين'],['[−] 0.21 [=]','0.0694','الفرق']],
+q:'Commonwealth Construction (CC) has total assets of $3,000,000, a BEP of 35%, and a tax rate of 40%. Calculate CC\'s ROE (a) if it is financed entirely with equity, and (b) if 30% of its assets are financed with debt at an interest rate of 8%. What is the difference in ROE?',
+b:[{lab:'(a) ROE, all equity = NI ÷ Equity',k:'f',p:[['Net income',630000],['Equity',3000000]],r:['ROE (%)',21,{pc:1}]},
+{lab:'(b) ROE, 30% debt = NI ÷ Equity',k:'f',p:[['Net income',586800],['Equity',2100000]],r:['ROE (%)',27.94,{pc:1}]},
+{lab:'Difference (b) − (a)',k:'o',p:[['ROE (b) %',27.94],['ROE (a) %',21]],ops:['−'],r:['Difference (points)',6.94]}],
+mo:'EBIT = 1,050,000. All equity: NI = 630,000; ROE = 21.0%. With 30% debt: interest = 72,000; NI = 586,800; equity = 2,100,000; ROE = 27.94%. Difference = 6.94 points.',
+me:'الدين رفع العائد حوالي 7 نقط لأن الأصول بتكسب 35% والفايدة 8% بس. بس الدين سيف بحدين: لو الأصول كسبت أقل من 8%، المساهمين هيخسروا.'},
+
+{id:'4-17',t:'Conceptual: ROE, BEP and debt',co:'',
+m:'فهمك للعلاقة بين BEP و ROE والدين، من غير حسابات.',
+ab:[['BEP','Basic Earning Power','EBIT ÷ الأصول، بيتحسب قبل الفوايد والضرايب'],['ROE','Return on Equity','صافي الربح ÷ حقوق الملكية، بيتأثر بالتمويل']],
+hi:'BEP بيقيس قوة الأصول نفسها، فمبيتأثرش بالضريبة ولا الفايدة ولا نسبة الدين.',lo:'ROE هو اللي بيتأثر بالدين: يعلى لو BEP أكبر من الفايدة، ويقل لو أصغر.',
+f:['BEP = EBIT ÷ Total assets   (before interest & taxes)'],
+c:[],
+q:'Which of the following statements is most correct? (Options reconstructed from the lecture; check the exact wording in the book.)',
+b:[{lab:'Choose one answer',k:'q',o:['If a firm\'s BEP is constant and higher than the interest rate on its debt, adding assets financed with debt will raise its ROE.','A firm\'s BEP changes when its tax rate changes.','A firm\'s BEP falls when its interest expense rises.','A firm\'s BEP rises when its debt ratio rises.'],a:0}],
+mo:'Answer (a). BEP = EBIT ÷ Total assets is measured before interest and taxes, so it is not affected by taxes, interest expense or the debt ratio. When BEP exceeds the interest rate, debt-financed assets raise ROE (as in 4-16).',
+me:'الفكرة اللي الدكتور ركز عليها: BEP بيقيس الأصول، وROE بيقيس المساهمين، والدين بيكبّر النتيجة سواء كانت حلوة أو وحشة.'},
+
+{id:'4-18',t:'Times interest earned',co:'MPI Incorporated',
+m:'تغطية الفوايد، نفس فكرة 4-12 بأرقام مختلفة وضريبة 35%.',
+ab:[['TIE','Times Interest Earned','EBIT ÷ الفوايد'],['EBT','','صافي الربح ÷ (1 − الضريبة)']],
+hi:'TIE أعلى من الصناعة: الدائنين مطمئنين.',lo:'TIE أقل: خطر وصعوبة في الاقتراض.',
+f:['EBIT = 11% × Sales','NI = 6% × Sales','EBT = NI ÷ (1 − T)','Interest = EBIT − EBT','TIE = EBIT ÷ Interest'],
+c:[['[AC] 0.11 [×] 6 [=]','0.6600','EBIT'],['[AC] 0.06 [×] 6 [÷] [(] 1 [−] 0.35 [)] [=]','0.5538','EBT'],['0.66 [−] [Ans] [=]','0.1062','الفايدة'],['0.66 [÷] [Ans] [=]','6.2174','TIE']],
+q:'MPI Incorporated has $6 billion in sales, its EBIT is 11% of sales, its net income is 6% of sales, and its tax rate is 35%. What is its times-interest-earned (TIE) ratio?',
+b:[{lab:'TIE = EBIT ÷ Interest ($ billions)',k:'f',p:[['EBIT',0.66,{s:1}],['Interest',0.10615,{s:1}]],r:['TIE (×)',6.2174]}],
+mo:'EBIT = 0.66 bn; NI = 0.36 bn; EBT = 0.36 ÷ 0.65 = 0.554 bn; Interest = 0.106 bn; TIE = 0.66 ÷ 0.106 = 6.2×.',
+me:'الأرباح التشغيلية بتغطي الفايدة أكتر من 6 مرات، هامش أمان كويس للدائنين.'},
+
+{id:'4-19',t:'Current ratio and notes payable',co:'Stewart Company',
+m:'أقصى قرض قصير الأجل تقدر الشركة تاخده من غير ما السيولة تنزل تحت شرط البنك.',
+ab:[['CA','Current Assets','الأصول المتداولة'],['CL','Current Liabilities','الخصوم المتداولة'],['Notes payable','أوراق دفع','قرض قصير؛ الفلوس بتدخل مخزون فبتزود البسط والمقام بنفس المبلغ']],
+hi:'نسبة تداول أعلى من 2: البنك مطمئن.',lo:'لو الشركة اقترضت أكتر من الحد، النسبة هتنزل تحت 2 والبنك هيرفض.',
+f:['(CA + x) ÷ (CL + x) = 2.0','CA + x = 2CL + 2x  ⇒  x = CA − 2 × CL'],
+c:[['[AC] 2392500 [−] 2 [×] 1076625 [=]','239250.0000','الآلة بتضرب الأول ثم تطرح'],['[AC] [(] 2392500 [+] 239250 [)] [÷] [(] 1076625 [+] 239250 [)] [=]','2.0000','تحقق: لازم تطلع 2']],
+q:'Stewart Company has $2,392,500 in current assets and $1,076,625 in current liabilities. It plans to raise additional funds as notes payable and use them to increase inventory. Its bank requires a current ratio of at least 2.0×. How much can Stewart\'s short-term debt (notes payable) increase without pushing its current ratio below 2.0×?',
+b:[{lab:'x = CA − 2 × CL',k:'o',p:[['CA',2392500],['2 × CL',2153250]],ops:['−'],r:['Max notes payable ($)',239250]},
+{lab:'Check: (CA + x) ÷ (CL + x)',k:'f',p:[['CA + x',2631750],['CL + x',1315875]],r:['Current ratio (×)',2]}],
+mo:'(2,392,500 + x) ÷ (1,076,625 + x) = 2.0 → 2,392,500 + x = 2,153,250 + 2x → x = $239,250.',
+me:'كل جنيه بيتقترض ويدخل مخزون بيقرّب النسبة من 1. الـ 239,250 هو السقف اللي البنك هيسمح بيه.'},
+
+{id:'4-20',t:'DSO and accounts receivable',co:'Ingraham Inc.',
+m:'أثر تسريع التحصيل من العملاء على رصيد المدينين.',
+ab:[['DSO','Days Sales Outstanding','فترة التحصيل: كام يوم مبيعات واقف عند العملاء'],['Receivables','حسابات المدينين','فلوس لينا عند العملاء'],['Sales per day','مبيعات اليوم','المبيعات السنوية ÷ 365']],
+hi:'DSO أعلى من الصناعة: التحصيل بطيء وفلوس واقفة عند العملاء.',lo:'DSO أقل: تحصيل أسرع وكاش متاح أكتر (الأقل هنا أحسن).',
+f:['Sales per day = Receivables ÷ DSO','New sales per day = Sales per day × 0.85','New receivables = New DSO × New sales per day'],
+c:[['[AC] 205000 [÷] 71 [=]','2887.3239','مبيعات اليوم دلوقتي'],['[×] 0.85 [=]','2454.2254','بعد نزول المبيعات 15%'],['[×] 20 [=]','49084.5070','المدينين الجديد']],
+q:'Ingraham Inc. currently has $205,000 in accounts receivable, and its days sales outstanding (DSO) is 71 days. It wants to reduce its DSO to 20 days by pressuring more of its customers to pay their bills on time. If this policy is adopted, the company\'s average sales will fall by 15%. What will be the level of accounts receivable following the change? Assume a 365-day year.',
+b:[{lab:'Sales per day (now) = Receivables ÷ DSO',k:'f',p:[['Receivables',205000],['DSO',71]],r:['Sales per day ($)',2887.32]},
+{lab:'New receivables = New DSO × New sales per day',k:'x',p:[['New DSO',20],['New sales per day',2454.23]],r:['New receivables ($)',49084.5]}],
+mo:'Sales per day = 205,000 ÷ 71 = 2,887.32; new sales per day = 2,454.23; new receivables = 20 × 2,454.23 = $49,085.',
+me:'المدينين نزلوا من 205 ألف لحوالي 49 ألف، يعني حوالي 156 ألف دولار رجعوا كاش للشركة حتى مع نزول المبيعات.'},
+
+{id:'4-21',t:'P/E and stock price',co:'Ferrell Inc.',
+m:'لو مضاعف الربحية (P/E) ثابت، سعر السهم هيتحرك إزاي مع ربحية السهم.',
+ab:[['EPS','Earnings Per Share','صافي الربح ÷ عدد الأسهم'],['P/E','Price / Earnings','السعر ÷ EPS ⇐ السعر = P/E × EPS']],
+hi:'EPS أعلى السنة الجاية: السعر هيطلع بنفس النسبة طالما P/E ثابت.',lo:'لو الأسهم الجديدة كتير، EPS ممكن يقل والسعر ينزل حتى لو الربح زاد.',
+f:['EPS = NI ÷ Shares','P/E = Price ÷ EPS','Price next year = P/E × EPS next year'],
+c:[['[AC] 8000000 [÷] 540000 [=]','14.8148','EPS دلوقتي'],['21 [÷] [Ans] [=]','1.4175','P/E (اكتبه على ورقة)'],['[AC] 13200000 [÷] 621000 [=]','21.2560','EPS السنة الجاية'],['[×] 1.4175 [=]','30.1304','السعر']],
+q:'Ferrell Inc. recently reported net income of $8 million. It has 540,000 shares of common stock, which currently trade at $21 a share. Ferrell expects net income of $13.2 million next year and expects to have 621,000 shares outstanding. If its P/E ratio remains constant, what will its stock price be next year?',
+b:[{lab:'P/E = Price ÷ EPS (now)',k:'f',p:[['Price',21],['EPS',14.8148]],r:['P/E (×)',1.4175]},
+{lab:'Price next year = P/E × EPS next year',k:'x',p:[['P/E',1.4175],['EPS next year',21.256]],r:['Price ($)',30.13]}],
+mo:'EPS now = 14.81; P/E = 21 ÷ 14.81 = 1.4175×; EPS next year = 21.26; price = 1.4175 × 21.26 = $30.13.',
+me:'ربحية السهم هتزيد حوالي 43.5%، فالسعر هيطلع من 21 لـ 30.13. (الـ P/E الصغير ده من أرقام الكتاب، المهم الفكرة.)'},
+
+{id:'4-22',t:'Balance sheet analysis',co:'',
+m:'إزاي النسب لوحدها تبني ميزانية كاملة، بند بند.',
+ab:[['TAT','Sales / Total assets','⇐ المبيعات = 1.5 × الأصول'],['DSO','Days Sales Outstanding','⇐ المدينين = DSO × مبيعات اليوم'],['Inventory turnover','دوران المخزون','المبيعات ÷ المخزون (تعريف الكتاب)'],['Fixed assets turnover','دوران الأصول الثابتة','المبيعات ÷ الأصول الثابتة'],['Current ratio','نسبة التداول','الأصول المتداولة ÷ الخصوم المتداولة']],
+hi:'لو جانب الالتزامات وحقوق الملكية طلع 300,000 زي الأصول، يبقى الحل صح والميزانية متوازنة.',lo:'لو مش متوازنة، راجع أي بند طلعته غلط. وخلي بالك: Gross profit margin هنا مش محتاجينه.',
+f:['Sales = 1.5 × Total assets','Receivables = DSO × (Sales ÷ 365)','Inventories = Sales ÷ 5','Fixed assets = Sales ÷ 3','Cash = TA − Receivables − Inventories − Fixed assets','CL = Current assets ÷ 2','Common stock = TA − CL − LTD − Retained earnings'],
+c:[['[AC] 1.5 [×] 300000 [=]','450000.0000','المبيعات'],['[AC] 36.5 [×] [(] 450000 [÷] 365 [)] [=]','45000.0000','المدينين'],['[AC] 450000 [÷] 5 [=]','90000.0000','المخزون'],['[AC] 450000 [÷] 3 [=]','150000.0000','الأصول الثابتة'],['[AC] 300000 [−] 45000 [−] 90000 [−] 150000 [=]','15000.0000','الكاش'],['[AC] 15000 [+] 45000 [+] 90000 [=]','150000.0000','الأصول المتداولة'],['[÷] 2 [=]','75000.0000','الخصوم المتداولة'],['[AC] 300000 [−] 75000 [−] 60000 [−] 97500 [=]','67500.0000','Common stock']],
+q:'Complete the balance sheet and sales information using the following data: total assets = $300,000; long-term debt = $60,000; retained earnings = $97,500; total assets turnover = 1.5×; days sales outstanding = 36.5 days; inventory turnover ratio (sales ÷ inventories) = 5.0×; fixed assets turnover = 3.0×; current ratio = 2.0×; gross profit margin = 25%. Find sales, cash, accounts receivable, inventories, fixed assets, current liabilities and common stock. Assume a 365-day year.',
+b:[{lab:'Sales = TAT × Total assets',k:'x',p:[['TAT',1.5],['Total assets',300000]],r:['Sales ($)',450000]},
+{lab:'Cash = TA − Receivables − Inventories − Fixed assets',k:'o',p:[['TA',300000],['Receivables',45000],['Inventories',90000],['Fixed assets',150000]],ops:['−','−','−'],r:['Cash ($)',15000]},
+{lab:'Common stock = TA − CL − LTD − Retained earnings',k:'o',p:[['TA',300000],['CL',75000],['LTD',60000],['RE',97500]],ops:['−','−','−'],r:['Common stock ($)',67500]}],
+mo:'Sales = 450,000; receivables = 45,000; inventories = 90,000; fixed assets = 150,000; cash = 15,000; current assets = 150,000; current liabilities = 75,000; common stock = 67,500. Check: 75,000 + 60,000 + 67,500 + 97,500 = 300,000.',
+me:'كل نسبة اديتنا بند، والميزانية اتقفلت على 300,000 في الجانبين. في الامتحان التزم بتعريف الكتاب: Inventory turnover = Sales ÷ Inventories.'},
+
+{id:'4-23',t:'Ratio analysis',co:'Barry Computer Co.',
+m:'فحص طبي كامل للشركة: نحسب نسب Table 4.2 ونقارن كل واحدة بالصناعة، ونحدد نقط القوة والضعف.',
+ab:[['DSO','Days Sales Outstanding','المدينين ÷ مبيعات اليوم'],['TAT','Total Assets Turnover','المبيعات ÷ الأصول'],['ROE','Return on Equity','صافي الربح ÷ حقوق الملكية'],['M/B','Market / Book','السعر ÷ القيمة الدفترية للسهم']],
+hi:'معظم النسب: الأعلى من الصناعة أحسن (هامش، دوران، عوائد، تقييم السوق).',lo:'استثناءين الأقل فيهم أحسن: DSO (الصناعة 35 يوم) و Debt to capital (الصناعة 47%).',
+f:['DSO = Receivables ÷ (Sales ÷ 365)','TAT = Sales ÷ Total assets','ROE = NI ÷ Equity','M/B = Price ÷ (Equity ÷ Shares)'],
+c:[['[AC] 336 [÷] [(] 1607.5 [÷] 365 [)] [=]','76.2924','DSO بالأيام'],['[AC] 1607.5 [÷] 947.5 [=]','1.6966','TAT'],['[AC] 27.3 [÷] 361 [=]','0.0756','ROE'],['[AC] 361 [÷] 36.1 [=]','10.0000','BVPS'],['12 [÷] [Ans] [=]','1.2000','M/B']],
+q:'Barry Computer Co. ($ millions, except per-share data): cash 77.5; accounts receivable 336; inventories 241.5; current assets 655; total assets 947.5; current liabilities 330 (including notes payable 84); long-term debt 256.5; common equity 361; sales 1,607.5; EBIT 70; interest 24.5; net income 27.3; D&A 41.5; 36.1 million shares; price $12; tax rate 40%. Industry: DSO 35 days; total assets turnover 3.0×; ROE 9.0%; M/B 4.22×. Calculate the ratios, compare with the industry, and outline Barry\'s strengths and weaknesses.',
+b:[{lab:'DSO = Receivables ÷ Sales per day',k:'f',p:[['Receivables',336,{s:1}],['Sales per day',4.4041,{s:1}]],r:['DSO (days)',76.29]},
+{lab:'TAT = Sales ÷ Total assets',k:'f',p:[['Sales',1607.5,{s:1}],['Total assets',947.5,{s:1}]],r:['TAT (×)',1.6966]},
+{lab:'ROE = Net income ÷ Equity',k:'f',p:[['Net income',27.3,{s:1}],['Equity',361,{s:1}]],r:['ROE (%)',7.56,{pc:1}]},
+{lab:'M/B = Price ÷ BVPS',k:'f',p:[['Price',12],['BVPS',10]],r:['M/B (×)',1.2]}],
+mo:'Current 1.98× (2.0); quick 1.25× (1.3); DSO 76.3 days (35, poor); inventory turnover 6.66× (6.7); TAT 1.70× (3.0, poor); PM 1.70% (1.2%, good); ROA 2.88% (3.6%); ROE 7.56% (9.0%); ROIC 5.99% (7.5%); TIE 2.86× (3.0); debt/capital 48.5% (47%); M/B 1.20× (4.22); P/E 15.9× (17.86); EV/EBITDA 6.24× (9.14). DuPont: 1.70% × 1.70 × 2.62 = 7.56% vs 1.2% × 3.0 × 2.5 = 9.0%. Strength: profit margin. Weaknesses: slow collection and low asset turnover → returns and market value below industry. (d) If sales and assets grew fast during the year, use average balances.',
+me:'الشركة بتكسب كويس على كل جنيه مبيعات، لكن أصولها كتير على مبيعاتها والتحصيل بطيء (76 يوم مقابل 35)، فالعوائد أقل من الصناعة والسوق بيقيّمها ضعيف. العلاج: تسريع التحصيل وتقليل الأصول العاطلة.'},
+
+{id:'4-24',t:'DuPont analysis',co:'Low-ROE firm',
+m:'منين مشكلة الـ ROE الضعيف: من قائمة الدخل (الهامش) ولا من الميزانية (حجم الأصول)؟',
+ab:[['TAT','Total Assets Turnover','المبيعات ÷ الأصول'],['Inventory turnover','دوران المخزون','المبيعات ÷ المخزون'],['ROE','Return on Equity','صافي الربح ÷ حقوق الملكية'],['EM','Equity Multiplier','الأصول ÷ حقوق الملكية']],
+hi:'لو PM أعلى من الصناعة، المشكلة مش في قائمة الدخل.',lo:'لو TAT أقل من الصناعة، المشكلة في الميزانية: أصول كتير (مخزون، مدينين، كاش) على قد المبيعات.',
+f:['TAT = Sales ÷ Total assets','Inventory turnover = Sales ÷ Inventories','ROE = NI ÷ Equity  =  PM × TAT × EM'],
+c:[['[AC] 795 [÷] 450 [=]','1.7667','TAT'],['[AC] 795 [÷] 159 [=]','5.0000','دوران المخزون'],['[AC] 27 [÷] 315 [=]','0.0857','ROE'],['[AC] 27 [÷] 795 [=]','0.0340','PM (للمقارنة بـ 3%)']],
+q:'A firm ($ millions): sales 795; net income 27; total assets 450; common equity 315; inventories 159; receivables 66; current assets 303; current liabilities 85. Industry: total assets turnover 3.0×; inventory turnover 10.0×; profit margin 3.0%; ROE 12.86%. Calculate the key ratios, construct the DuPont equation, and decide whether the balance sheet or the income statement is primarily responsible for the low ROE.',
+b:[{lab:'TAT = Sales ÷ Total assets',k:'f',p:[['Sales',795,{s:1}],['Total assets',450,{s:1}]],r:['TAT (×)',1.7667]},
+{lab:'Inventory turnover = Sales ÷ Inventories',k:'f',p:[['Sales',795,{s:1}],['Inventories',159,{s:1}]],r:['Inventory turnover (×)',5]},
+{lab:'ROE = Net income ÷ Equity',k:'f',p:[['Net income',27,{s:1}],['Equity',315,{s:1}]],r:['ROE (%)',8.57,{pc:1}]},
+{lab:'The low ROE comes mainly from…',k:'q',o:['The balance sheet (too many assets for the sales generated)','The income statement (low profit margin)'],a:0}],
+mo:'Current 3.56× (3.0); debt/capital 20.1% (20%); TIE 11.0× (7.0); EBITDA coverage 9.46× (9.0); inventory turnover 5.0× (10.0); DSO 30.3 days (24); FA turnover 5.41× (6.0); TAT 1.77× (3.0); PM 3.40% (3.0%); ROA 6.0% (9.0%); ROE 8.57% (12.86%); ROIC 7.54% (11.5%). DuPont: 3.40% × 1.77 × 1.43 = 8.57% vs 3.0% × 3.0 × 1.43 = 12.86%. The balance sheet is the problem: inventories, then receivables and excess cash. Seasonal or fast growth distorts year-end figures: use average or monthly balances.',
+me:'الهامش كويس والدين زي الصناعة، يعني المشكلة إن الشركة ماسكة أصول أكتر من اللازم: مخزون ضعف المعدل، وعملاء بيدفعوا أبطأ، وكاش زايد. ده اللي نزّل ROA لـ 6% و ROE لـ 8.57%.'}
+];
+
+const FAMS={liq:['السيولة','Liquidity','هل الشركة تقدر تسدد ديونها القصيرة؟'],ast:['إدارة الأصول','Asset management','الأصول بتشتغل بكفاءة ولا نايمة؟'],dbt:['الديون','Debt management','الشركة مديونة قد إيه وتقدر تسدد؟'],prf:['الربحية','Profitability','بتكسب كام من فلوسها؟'],mkt:['القيمة السوقية','Market value','السوق شايف الشركة إزاي؟'],dup:['ديبونت','DuPont','العائد جاي منين: هامش ولا دوران ولا دين؟'],mix:['تحليل شامل','Full analysis','كل العائلات مع بعض']};
+const FAM={'4-4':'mkt','4-5':'mkt','4-6':'dup','4-7':'prf','4-8':'dup','4-9':'prf','4-10':'mkt','4-11':'dup','4-12':'dbt','4-13':'dbt','4-14':'prf','4-15':'liq','4-16':'dbt','4-17':'dbt','4-18':'dbt','4-19':'liq','4-20':'ast','4-21':'mkt','4-22':'ast','4-23':'mix','4-24':'dup'};
+const HOOK={
+'4-4':'M/B = «السوق على الدفتر»: السوق فوق والدفتر تحت. وEV = «تمن الشركة كلها»: تدفع للمساهمين + تشيل ديونها − تاخد الكاش اللي في الخزنة.',
+'4-5':'P/E = «بكام الجنيه ربح؟» السعر فوق والربح تحت. وكل ما الرقم يكبر، السوق متفائل أكتر.',
+'4-6':'ديبونت = «هامش × دوران × دين» = ه·د·د. تلات حروف تفتكر بيهم مصادر العائد التلاتة.',
+'4-7':'ROIC = «فلوس الكل للكل»: الربح التشغيلي بعد الضريبة ÷ فلوس كل الممولين (بنك + مساهمين).',
+'4-8':'«امشي ديبونت بالعكس»: ROE ÷ EM = ROA، وبعدين ROA × الأصول = صافي الربح.',
+'4-9':'BEP = «قوة الأصول قبل ما البنك والضرايب ياخدوا حقهم».',
+'4-10':'«السوق بيضرب الدفتر»: M/B × حقوق الملكية الدفترية = قيمة الأسهم في البورصة.',
+'4-11':'ROA = هامش × دوران، و EM = ROE ÷ ROA. EM = 2 يعني «نص بنص»: نص الأصول دين.',
+'4-12':'«سلّم الرجوع»: NI ÷ (1 − T) = EBT، وبعدين EBIT − EBT = الفايدة. TIE = EBIT فوق الفايدة.',
+'4-13':'الفايدة = «سعرها × الدين»، وبعدها نفس سلّم الرجوع بتاع 4-12.',
+'4-14':'«اطرح الفايدة، شيل الضريبة، اقسم على الملكية».',
+'4-15':'«مخزون نايم = فلوس نايمة»: صحّيه ورجّع فلوسه للمساهمين، فالعائد يعلى.',
+'4-16':'«الدين بيعلّي الصوت»: لو BEP أكبر من الفايدة، العائد يعلى، ولو أقل، يوطّي.',
+'4-17':'«BEP قبل البنك والضرايب، و ROE بعدهم».',
+'4-18':'نفس سلّم 4-12 بالظبط، بس الضريبة 35%: ÷ 0.65.',
+'4-19':'«اللي داخل البسط داخل المقام»، والحل المختصر: x = CA − 2 × CL.',
+'4-20':'«مبيعات اليوم × عدد الأيام = فلوس عند الزباين».',
+'4-21':'«P/E ثابت = السعر ماشي ورا الـ EPS».',
+'4-22':'«ابدأ بالمبيعات»: كل نسبة بتفتحلك بند، والكاش هو اللي بيفضل في الآخر.',
+'4-23':'Table 4.2: «الأعلى أحسن» في كل النسب ما عدا اتنين: DSO والدين، الأقل فيهم أحسن.',
+'4-24':'«هامش كويس + دوران ضعيف = الميزانية هي المتهم».'};
+const TC=[['Notes payable','#c2255c'],['Long-term debt','#c2255c'],['LTD','#c2255c'],['Debt','#c2255c'],['Net income','#2f9e44'],['NI','#2f9e44'],['Total assets','#1c7ed6'],['Assets','#1c7ed6'],['TA','#1c7ed6'],['Book equity','#7048e8'],['Market equity','#7048e8'],['New equity','#7048e8'],['Equity','#7048e8'],['EBITDA','#0b7285'],['EBIT','#0c8599'],['EBT','#099268'],['Interest','#e03131'],['Sales','#f08c00'],['Price','#ae3ec9'],['EPS','#9c36b5'],['BVPS','#6741d9'],['Shares','#5c940d'],['Cash','#2b8a3e'],['Receivables','#e8590c'],['Inventories','#d9480f'],['Inventory','#d9480f'],['CA','#1864ab'],['CL','#c92a2a'],['DSO','#e8590c'],['ROE','#2f9e44'],['ROA','#37b24d'],['ROIC','#0ca678'],['BEP','#0c8599'],['PM','#f59f00'],['TAT','#1971c2'],['EM','#862e9c']];
+const TRX=new RegExp('\\b('+TC.map(t=>t[0]).join('|')+')\\b','g'),TCM=Object.fromEntries(TC);
+const col=s=>esc(s).replace(TRX,m=>`<span class="tm" style="color:${TCM[m]}">${m}</span>`);
+const CARDS=[['P/E','مضاعف الربحية','Price ÷ EPS','mkt','الأعلى = تفاؤل بالنمو'],['M/B','السوق على الدفتر','Price ÷ BVPS','mkt','الأعلى = السوق واثق'],['BVPS','القيمة الدفترية للسهم','Equity ÷ Shares','mkt',''],['EV','قيمة المنشأة','Market equity + Debt − Cash','mkt',''],['EV/EBITDA','قيمة المنشأة للربح التشغيلي','EV ÷ EBITDA','mkt','الأعلى = تقييم أغلى'],['ROE','العائد على حقوق الملكية','NI ÷ Equity','prf','الأعلى أحسن'],['ROA','العائد على الأصول','NI ÷ Total assets','prf','الأعلى أحسن'],['PM','هامش صافي الربح','NI ÷ Sales','prf','الأعلى أحسن'],['BEP','القوة الإيرادية الأساسية','EBIT ÷ Total assets','prf','الأعلى أحسن'],['ROIC','العائد على رأس المال المستثمر','EBIT × (1 − T) ÷ (Debt + Equity)','prf','الأعلى أحسن'],['DuPont','معادلة ديبونت','ROE = PM × TAT × EM','dup','ه·د·د'],['EM','مضاعف حقوق الملكية','Total assets ÷ Equity','dup','الأعلى = دين أكتر'],['TAT','دوران الأصول','Sales ÷ Total assets','ast','الأعلى أحسن'],['Inventory turnover','دوران المخزون','Sales ÷ Inventories','ast','الأعلى أحسن'],['DSO','فترة التحصيل','Receivables ÷ (Sales ÷ 365)','ast','الأقل أحسن'],['Current ratio','نسبة التداول','CA ÷ CL','liq','الأعلى = سيولة أكتر'],['Quick ratio','النسبة السريعة','(CA − Inventories) ÷ CL','liq','الأعلى = سيولة أكتر'],['TIE','تغطية الفوايد','EBIT ÷ Interest','dbt','الأعلى أحسن'],['Debt to capital','الدين لرأس المال','Debt ÷ (Debt + Equity)','dbt','الأقل أمان للدائنين'],['EBT','الربح قبل الضريبة','NI ÷ (1 − T)','dbt','سلّم الرجوع']];
+const ICON='<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="#fff" stroke-width="8"/><path d="M28 62h44M50 30v44M34 40h32" stroke="#fff" stroke-width="8" stroke-linecap="round"/></svg>';
+const app=document.getElementById('app'),rail=document.getElementById('rail'),prog=document.getElementById('prog');
+let done=new Set();try{done=new Set(JSON.parse(localStorage.getItem('fhw-done')||'[]'))}catch(e){}
+const save=()=>{try{localStorage.setItem('fhw-done',JSON.stringify([...done]))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const keys=s=>s.split(' ').filter(Boolean).map(t=>/^\[.*\]$/.test(t)?`<kbd>${esc(t.slice(1,-1))}</kbd>`:`<span class="num">${esc(t)}</span>`).join('');
+const fld=(b,i,j,p)=>`<div class="fld" data-b="${i}" data-j="${j}"><input type="text" inputmode="decimal" id="in-${i}-${j}" aria-label="${esc(p[0])}" autocomplete="off"><small>${esc(p[0])}</small><span class="mk"></span></div>`;
+function boxHTML(b,i){
+  if(b.k==='q')return `<div class="box mcq" data-b="${i}"><p class="t">${esc(b.lab)}</p>${b.o.map((o,j)=>`<label id="lb-${i}-${j}"><input type="radio" name="mc-${i}" value="${j}"><span>(${'abcd'[j]}) ${esc(o)}</span></label>`).join('')}</div>`;
+  const parts=b.p.map((p,j)=>fld(b,i,j,p));let mid;
+  if(b.k==='f')mid=`<span class="frac">${parts[0]}<hr>${parts[1]}</span>`;
+  else if(b.k==='x')mid=parts.join('<span class="op">×</span>');
+  else mid=parts.map((x,j)=>j?`<span class="op">${b.ops[j-1]}</span>${x}`:x).join('');
+  return `<div class="box" data-b="${i}"><p class="t">Required: ${col(b.lab)}</p><div class="eq">${mid}<span class="op">=</span>${fld(b,i,'r',b.r)}</div></div>`;
+}
+function intro(){
+  return `<div class="intro"><h2>اتدرّب على الواجب بنفسك</h2><p class="sub">Brigham &amp; Houston · Chapter 4 · Problems 4-4 to 4-24</p>
+  <section><h3>إزاي تستخدم الصفحة</h3><ol>
+  <li>اختار المسألة من الشريط اللي فوق.</li>
+  <li>اقرا <b>«قبل ما تحل»</b>: السؤال بيقيس إيه، الاختصارات بالبلدي، النتيجة معناها إيه لو طلعت أعلى أو أقل، والمعادلة.</li>
+  <li>اقرا السؤال بالإنجليزي وحل على ورقة بالآلة الحاسبة. لو اتلخبطت افتح <b>خطوات الآلة الحاسبة</b>.</li>
+  <li>اكتب البسط والمقام (أو العوامل) والناتج في الخانات، ودوس <b>Check my answer</b>: كل خانة هيظهر جنبها ✅ أو ❌.</li>
+  <li>لما تخلص صح، هيظهرلك <b>معنى النتيجة</b> تمويليًا، والمسألة تتعلّم بعلامة خضرا في الشريط.</li></ol></section>
+  <section><h3>قواعد الكتابة</h3><ol>
+  <li>خانة الناتج اللي جنبها <span class="f">(%)</span> اكتبها رقم عادي: 14.25 يعني 14.25%.</li>
+  <li>الخانات اللي مكتوب فوقها «عشري» اكتب النسبة عشري: 3% تتكتب 0.03.</li>
+  <li>اكتب الأرقام من غير فواصل أو بيها، مش هتفرق. وقرّب لرقمين عشريين.</li>
+  <li>الأرقام بالمليون أو بالمليار في البسط والمقام مقبولة بأي وحدة، طالما الاتنين بنفس الوحدة.</li></ol></section>
+  <section><h3>ظبط الآلة الحاسبة <small>Casio fx-991ES PLUS / fx-991EX</small></h3>
+  <ul class="steps"><li><span class="keys">${keys('[SHIFT] [MODE]')}</span><span>تفتح قائمة SETUP</span></li>
+  <li><span class="keys">${keys('Fix 4')}</span><span>اختار Fix ثم 4: الشاشة تعرض 4 أرقام عشرية زي الإجابات هنا. للرجوع اختار Norm.</span></li>
+  <li><span class="keys">${keys('[AC]')}</span><span>تمسح الشاشة قبل كل حساب جديد.</span></li>
+  <li><span class="keys">${keys('[Ans]')}</span><span>آخر ناتج طلع، تستخدمه في الخطوة اللي بعدها.</span></li>
+  <li><span class="keys">${keys('[(] [)]')}</span><span>الأقواس: حط المقام كله جوه قوس علشان القسمة تبقى على المجموع.</span></li>
+  <li><span class="keys">${keys('[S⇔D]')}</span><span>لو الناتج طلع كسر، دي بتحوّله لرقم عشري.</span></li></ul></section>
+  <section><h3>كود الألوان: كل عيلة نسب ليها لون</h3><p class="note">كل مسألة متلوّنة بلون عيلتها، وكل متغير ليه لون ثابت في كل الصفحات (Sales برتقالي، Net income أخضر، Total assets أزرق، Equity بنفسجي، Interest أحمر). المخ بيربط اللون بالمعلومة، فلما تشوف اللون تفتكر المعادلة.</p><div class="legend">${Object.entries(FAMS).filter(e=>e[0]!=="mix").map(([k,f])=>`<div class="fam-${k}">${f[0]} · ${f[1]}<small>${f[2]}</small></div>`).join("")}</div></section>
+  <section><h3>تقنيات المذاكرة اللي في الصفحة</h3><ol><li><b>التذكّر النشط:</b> المعادلة مخفية لحد ما تحاول تفتكرها.</li><li><b>جملة «خلّي في بالك»:</b> جملة قصيرة تربط المعادلة بصورة في دماغك.</li><li><b>الترميز بالألوان:</b> نفس اللون لنفس المتغير في كل مكان.</li><li><b>Flashcards بالتكرار المتباعد:</b> الكروت اللي بتغلط فيها بترجعلك أكتر لحد ما تثبت.</li><li><b>التغذية الراجعة الفورية:</b> ✅ و ❌ على كل خانة.</li></ol><button class="main" onclick="location.hash='cards'">افتح الـ Flashcards</button></section>
+  <p class="warn">صياغة الأسئلة الإنجليزي هنا متجمعة من حلول المحاضرة، مش منقولة حرفيًا من الكتاب. قارنها بالكتاب ص 137–142 قبل الامتحان.</p>
+  <div class="nav"><span></span><button class="main" onclick="location.hash='p4-4'">Start · 4-4 →</button></div></div>`;
+}
+function view(p,ix){
+  const fm=FAM[p.id],F=FAMS[fm];
+  const ab=p.ab.map(a=>`<dt>${esc(a[0])}</dt><dd>${a[1]?`<i>${esc(a[1])}</i> — `:''}${esc(a[2])}</dd>`).join('');
+  const calc=p.c.length?`<details><summary>اعرض خطوات الآلة الحاسبة (جرّب لوحدك الأول)</summary><ol class="steps">${p.c.map(s=>`<li><span class="keys">${keys(s[0])}</span><span class="lcd">${esc(s[1])}</span><span class="note">${esc(s[2])}</span></li>`).join('')}</ol></details>`:'<p class="note">المسألة دي فهم، مفيهاش حسابات.</p>';
+  return `<div class="band fam-${fm}">${ICON}<span class="tag">${F[0]} · ${F[1]}</span><h2 class="ltr">Problem ${p.id} · ${esc(p.t)}</h2><p class="sub">${esc(p.co)}</p></div>
+  <section><h3>قبل ما تحل</h3>
+   <div class="blk b-m"><span class="lbl">السؤال ده بيقيس إيه: </span>${esc(p.m)}</div>
+   <div class="blk b-a"><p class="row lbl">الاختصارات بالبلدي</p><dl class="ab">${ab}</dl></div>
+   <p class="row lbl">قراءة النتيجة</p><div class="hl"><div class="up"><b>⬆ لو أعلى</b>${esc(p.hi)}</div><div class="dn"><b>⬇ لو أقل</b>${esc(p.lo)}</div></div>
+   <div class="blk b-f" style="margin-top:12px"><p class="row lbl">المعادلة</p><p class="note" style="margin:0 0 6px">افتكرها في دماغك الأول (التذكّر بيثبّت المعلومة)، وبعدين اكشفها واتأكد.</p><ul class="forms hide" id="fl">${p.f.map(x=>`<li>${col(x)}</li>`).join('')}</ul><button class="reveal" id="rv">اكشف المعادلة</button></div>
+   <div class="blk b-h"><span class="lbl">خلّي في بالك: </span>${esc(HOOK[p.id])}</div>
+   <div class="blk b-c"><p class="row lbl">على الآلة الحاسبة</p>${calc}</div></section>
+  <section><h3>Question</h3><div class="q ltr">${col(p.q)}</div></section>
+  <section><h3>Your solution</h3>${p.b.map(boxHTML).join('')}
+   <div class="btns"><button class="main" id="chk">✔ Check my answer</button><button id="clr">امسح وابدأ تاني</button><button id="mdl">اعرض الحل النموذجي</button></div>
+   <div class="res" id="res" role="status"></div>
+   <div class="model" id="model"><div class="q ltr"><b>Model answer.</b> ${col(p.mo)}</div><p class="mean"><span class="lbl">معنى النتيجة: </span>${esc(p.me)}</p></div></section>
+  <div class="nav">${ix>0?`<button onclick="location.hash='p${P[ix-1].id}'">← ${P[ix-1].id}</button>`:`<button onclick="location.hash='start'">← Start</button>`}${ix<P.length-1?`<button class="main" onclick="location.hash='p${P[ix+1].id}'">${P[ix+1].id} →</button>`:`<button class="main" onclick="location.hash='cards'">Flashcards →</button>`}</div>`;
+}
+const num=s=>{s=String(s).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[,\s%$×x]/g,'').replace('٫','.').replace('−','-');return s===''?NaN:Number(s)};
+const near=(x,v)=>Math.abs(x-v)<=Math.abs(v)*0.006+0.005;
+function judge(x,v,o){
+  if(isNaN(x))return['bad','اكتب رقم'];
+  if(near(x,v))return['ok','✅ صح'];
+  if(o&&o.s)for(const k of[1e-9,1e-6,1e-3,1e3,1e6,1e9])if(near(x*k,v))return['ok','✅ صح (بوحدة تانية)'];
+  if(o&&o.pc&&near(x*100,v))return['bad','اكتبها نسبة: '+(x*100).toFixed(2)];
+  if(o&&o.d&&near(x/100,v))return['bad','اكتبها عشري: '+(x/100)];
+  return['bad','❌ غلط'];
+}
+function bind(p){
+  const res=document.getElementById('res'),model=document.getElementById('model');
+  document.getElementById('chk').onclick=()=>{
+    let all=true,empty=true;
+    p.b.forEach((b,i)=>{
+      if(b.k==='q'){const sel=document.querySelector(`input[name=mc-${i}]:checked`);b.o.forEach((_,j)=>document.getElementById(`lb-${i}-${j}`).className='');
+        if(!sel){all=false;return}empty=false;const j=+sel.value;document.getElementById(`lb-${i}-${j}`).className=j===b.a?'ok':'bad';if(j!==b.a)all=false;return}
+      [...b.p.map((q,j)=>[j,q]),['r',b.r]].forEach(([j,q])=>{
+        const el=document.querySelector(`.fld[data-b="${i}"][data-j="${j}"]`),v=el.querySelector('input').value;
+        if(v.trim()!=='')empty=false;const [c,t]=judge(num(v),q[1],q[2]);el.className='fld '+c;el.querySelector('.mk').textContent=t;if(c!=='ok')all=false;});
+    });
+    if(empty){res.className='res bad';res.textContent='اكتب إجابتك الأول وبعدين دوس Check.';return}
+    if(all){res.className='res ok';res.innerHTML='✅ برافو! الإجابة صح.<p class="mean"><span class="lbl">معنى النتيجة: </span>'+esc(p.me)+'</p>';done.add(p.id);save();paintRail(p.id)}
+    else{res.className='res bad';res.textContent='❌ فيه خانات محتاجة مراجعة. ارجع لـ «قبل ما تحل» واتأكد من المعادلة والأقواس على الآلة الحاسبة، وبعدين جرّب تاني.'}
+  };
+  document.getElementById('clr').onclick=()=>{app.querySelectorAll('input[type=text]').forEach(x=>x.value='');app.querySelectorAll('input[type=radio]').forEach(x=>x.checked=false);app.querySelectorAll('.fld').forEach(f=>{f.className='fld';f.querySelector('.mk').textContent=''});app.querySelectorAll('.mcq label').forEach(l=>l.className='');res.className='res';model.classList.remove('show')};
+  const rv=document.getElementById('rv');rv.onclick=()=>{document.getElementById('fl').classList.remove('hide');rv.remove()};
+  document.getElementById('mdl').onclick=()=>model.classList.toggle('show');
+  app.querySelectorAll('input[type=text]').forEach(x=>x.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('chk').click()}));
+}
+function paintRail(cur){
+  rail.innerHTML=`<a href="#start" class="${cur==='start'?'on':''}">Start</a>`+P.map(p=>`<a href="#p${p.id}" class="fam-${FAM[p.id]} ${p.id===cur?'on':''} ${done.has(p.id)?'done':''}">${p.id}</a>`).join('')+`<a href="#cards" class="${cur==='cards'?'on':''}" style="min-width:96px">Flashcards</a>`;
+  prog.textContent=`محلول صح: ${done.size} من ${P.length}`;
+  const on=rail.querySelector('.on');if(on&&on.scrollIntoView)on.scrollIntoView({inline:'center',block:'nearest'});
+}
+let LB={};try{LB=JSON.parse(localStorage.getItem('fhw-lb')||'{}')}catch(e){}
+let ci=0;
+function cards(){
+  const box=k=>LB[k]||1,order=CARDS.map((c,i)=>i).sort((a,b)=>box(CARDS[a][0])-box(CARDS[b][0])||a-b);
+  const c=CARDS[order[ci%order.length]],cnt=[1,2,3].map(n=>CARDS.filter(x=>box(x[0])===n).length);
+  app.innerHTML=`<h2>Flashcards · كروت المعادلات</h2><p class="note">شوف الاسم، قول المعادلة بصوت عالي، وبعدين اقلب الكارت. لو عرفتها بتنقل لصندوق أعلى وتظهرلك أقل. لو غلطت بترجع للصندوق 1 وتتكرر أكتر (التكرار المتباعد).</p>
+  <div class="boxes"><span>صندوق 1 (لسه): ${cnt[0]}</span><span>صندوق 2: ${cnt[1]}</span><span>صندوق 3 (ثابتة): ${cnt[2]}</span></div>
+  <div class="card fam-${c[3]}"><span>${FAMS[c[3]][0]}</span><div class="big">${esc(c[0])}</div><div>${esc(c[1])}</div><div class="back" id="bk" hidden>${col(c[2])}<div style="font:600 15px Cairo,sans-serif;direction:rtl;margin-top:6px">${esc(c[4])}</div></div></div>
+  <div class="btns"><button class="main" id="flip">اقلب الكارت</button><button id="yes" hidden>✅ عرفتها</button><button id="no" hidden>❌ لسه</button></div>`;
+  const nx=k=>{LB[c[0]]=k;try{localStorage.setItem('fhw-lb',JSON.stringify(LB))}catch(e){}ci++;cards()};
+  document.getElementById('flip').onclick=e=>{document.getElementById('bk').hidden=false;e.target.hidden=true;document.getElementById('yes').hidden=false;document.getElementById('no').hidden=false};
+  document.getElementById('yes').onclick=()=>nx(Math.min(3,box(c[0])+1));
+  document.getElementById('no').onclick=()=>nx(1);
+}
+function route(){
+  const h=location.hash.slice(1),ix=P.findIndex(p=>'p'+p.id===h);
+  if(h==='cards'){cards();paintRail('cards')}else if(ix<0){app.innerHTML=intro();paintRail('start')}else{app.innerHTML=view(P[ix],ix);bind(P[ix]);paintRail(P[ix].id)}
+  window.scrollTo(0,0);
+}
+addEventListener('hashchange',route);route();
+}
+</script>
+</body>
+</html>
